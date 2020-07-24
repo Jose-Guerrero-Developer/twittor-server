@@ -14,7 +14,7 @@ import (
 func Init() {
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
-		PORT = "8080"
+		PORT = "54411"
 	}
 	router := mux.NewRouter()
 	router.HandleFunc("/", test)

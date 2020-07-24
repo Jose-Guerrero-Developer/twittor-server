@@ -16,6 +16,7 @@ func Init() {
 	if PORT == "" {
 		PORT = "8080"
 	}
+	log.Print("PORT: ", PORT)
 	router := mux.NewRouter()
 	router.HandleFunc("/", test)
 	handler := cors.AllowAll().Handler(router)

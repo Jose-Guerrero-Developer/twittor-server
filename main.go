@@ -1,16 +1,11 @@
 package main
 
-import (
-	"log"
-
-	"github.com/Jose-Guerrero-Developer/twittorbackend/database"
-	"github.com/Jose-Guerrero-Developer/twittorbackend/handlers"
-)
+import App "github.com/Jose-Guerrero-Developer/twittorbackend/app"
 
 func main() {
-	status, error := database.CheckConnectionStatus()
-	if !status {
-		log.Fatal(error)
-	}
-	handlers.Init()
+	/**
+	  En: Initialize the components of the application
+	  Es: Inicializar los componentes de la aplicación
+	*/
+	App.Run()
 }

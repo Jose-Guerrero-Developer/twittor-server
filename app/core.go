@@ -5,14 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
-
 	"github.com/Jose-Guerrero-Developer/twittorbackend/router"
-	"github.com/gorilla/mux"
-	"github.com/rs/cors"
+	"github.com/joho/godotenv"
 )
-
-var routerInstance = mux.NewRouter()
 
 // Run start serve
 func Run() {
@@ -23,13 +18,8 @@ func Run() {
 
 	PORT := os.Getenv("PORT")
 
-	router.Routes(subscribeRoutes)
-	routes := cors.AllowAll().Handler(routerInstance)
+	AppRoutes := router.NewRouter()
 
 	log.Print("Application: localhost:", PORT)
-	log.Fatal(http.ListenAndServe(":"+PORT, routes))
-}
-
-func subscribeRoutes(name string, handler func(w http.ResponseWriter, r *http.Request)) {
-	routerInstance.HandleFunc(name, handler)
+	log.Fatal(http.ListenAndServe(":"+PORT, AppRoutes))
 }

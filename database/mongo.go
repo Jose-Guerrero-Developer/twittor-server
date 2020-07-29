@@ -17,6 +17,11 @@ func connection() (client *mongo.Client) {
 	ctxConnection, cancelConnection := context.WithTimeout(context.Background(), 10*time.Second)
 	ctxCheckConnection, cancelCheckConnection := context.WithTimeout(context.Background(), 2*time.Second)
 
+	defer func() {
+		cancelConnection()
+		cancelCheckConnection()
+	}()
+
 	client, err := mongo.Connect(ctxConnection, options.Client().ApplyURI("mongodb+srv://root:root@estudios.r04jg.mongodb.net/<dbname>?retryWrites=true&w=majority"))
 	if err != nil {
 		log.Fatal(err.Error())
@@ -30,11 +35,6 @@ func connection() (client *mongo.Client) {
 	}
 
 	log.Println("Conexión establecidad al servidor de base de datos")
-
-	defer func() {
-		cancelConnection()
-		cancelCheckConnection()
-	}()
 	return
 }
 

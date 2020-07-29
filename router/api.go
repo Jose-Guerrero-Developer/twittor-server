@@ -28,10 +28,10 @@ func NewRouter() http.Handler {
 
 func (router *Router) getRoutes() {
 	var subscribe = router.instance.HandleFunc
-	// end point start
+	// endpoint start
 	subscribe("/", middlewares.CheckDatabaseConnectionStatus(controllers.Home)).Methods("GET")
-	// end point users
+	// endpoint users
 	subscribe("/users", middlewares.CheckDatabaseConnectionStatus(controllers.UserPost)).Methods("POST")
-	// end point login
+	// endpoint login
 	subscribe("/login", middlewares.CheckDatabaseConnectionStatus(controllers.AuthLogin)).Methods("POST")
 }

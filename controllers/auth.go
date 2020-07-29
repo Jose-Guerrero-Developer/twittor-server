@@ -3,6 +3,9 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
+
+	"github.com/Jose-Guerrero-Developer/twittorbackend/authentication"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/utils"
 
@@ -11,6 +14,8 @@ import (
 
 // AuthLogin login
 func AuthLogin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	var User models.User
 	var Auth models.Auth
 
@@ -21,28 +26,41 @@ func AuthLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	status := Auth.Authentication(&User)
-	data := map[string]string{}
-	statusHTTP := http.StatusOK
 
 	if !status {
-		statusHTTP = http.StatusUnauthorized
-		data["code"] = "006"
-		data["message"] = "Authentication"
-		data["description"] = "Access credentials are inconsistent"
+		w.WriteHeader(http.StatusUnauthorized)
+		response := utils.ResponseErrorJWT{
+			Code:        "006",
+			Message:     "Authentication",
+			Description: "Access credentials are inconsistent",
+		}
+		json.NewEncoder(w).Encode(&response)
+		return
 	}
 
-	if status {
-		data["accessToken"] = "token de acceso"
-		data["name"] = User.Name
-		data["email"] = User.Email
-		data["lastName"] = User.LastName
-		data["dateBirth"] = User.DateBirth.String()
-		data["avatar"] = User.Avatar
-		data["banner"] = User.Banner
-		data["biography"] = User.Biography
-		data["location"] = User.Location
-		data["website"] = User.Website
+	token, err := authentication.GenerateToken(&User)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := utils.ResponseErrorJWT{
+			Code:        "007",
+			Message:     "Authentication",
+			Description: "Impossible to generate access token. " + err.Error(),
+		}
+		json.NewEncoder(w).Encode(&response)
+		return
 	}
 
-	utils.Response(w, statusHTTP, data)
+	w.WriteHeader(http.StatusCreated)
+	signature := authentication.JWT{
+		Token: token,
+	}
+	json.NewEncoder(w).Encode(&signature)
+
+	expiresToken := time.Now().Add(1 * time.Hour)
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   token,
+		Expires: expiresToken,
+	})
 }

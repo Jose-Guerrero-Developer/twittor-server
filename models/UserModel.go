@@ -15,16 +15,16 @@ import (
 // User struct model
 type User struct {
 	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Name      string             `bson:"name" json:"name,omitempty"`
-	LastName  string             `bson:"lastName" json:"lastName,omitempty"`
-	DateBirth time.Time          `bson:"dateBirth" json:"dateBirth,omitempty"`
+	Name      string             `bson:"name" json:"name"`
+	LastName  string             `bson:"lastName" json:"lastName"`
+	DateBirth time.Time          `bson:"dateBirth" json:"dateBirth"`
 	Email     string             `bson:"email" json:"email"`
 	Password  string             `bson:"password" json:"password,omitempty"`
-	Avatar    string             `bson:"avatar" json:"avatar,omitempty"`
-	Banner    string             `bson:"banner" json:"banner,omitempty"`
-	Biography string             `bson:"biography" json:"biography,omitempty"`
-	Location  string             `bson:"location" json:"location,omitempty"`
-	Website   string             `bson:"website" json:"website,omitempty"`
+	Avatar    string             `bson:"avatar" json:"avatar"`
+	Banner    string             `bson:"banner" json:"banner"`
+	Biography string             `bson:"biography" json:"biography"`
+	Location  string             `bson:"location" json:"location"`
+	Website   string             `bson:"website" json:"website"`
 }
 
 // CheckExists validate if exists user

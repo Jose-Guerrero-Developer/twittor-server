@@ -11,12 +11,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-/*Email return session email */
-var Email string
-
-/*IDUser return session user id */
-var IDUser string
-
 /*JWT structure for managing authentication (JWT) */
 type JWT struct {
 	Token string `json:"token,omitempty"`
@@ -73,10 +67,10 @@ func ValidateToken(token string) (*models.ClaimJWT, bool, string, error) {
 		UserModel.Email = claims.Email
 		exists := UserModel.Exists()
 		if exists {
-			IDUser = claims.ID.Hex()
-			Email = claims.Email
+			models.IDUser = claims.ID.Hex()
+			models.Email = claims.Email
 		}
-		return claims, exists, IDUser, nil
+		return claims, exists, models.IDUser, nil
 	}
 	return claims, false, string(""), err
 }

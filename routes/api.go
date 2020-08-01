@@ -17,4 +17,5 @@ func (Controller *Driver) setRoutesAPI() {
 	/* route profile */
 	var ProfileController controllers.ProfileController
 	subscribe("/api/profile", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(ProfileController.Get))).Methods("GET")
+	subscribe("/api/profile", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(ProfileController.Update))).Methods("PUT")
 }

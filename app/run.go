@@ -20,6 +20,6 @@ func Run() {
 		log.Fatal("Failed to load driver route system. " + err.Error())
 	}
 
-	log.Print("Application: localhost:", Configs.Get("APP_PORT"))
-	log.Fatal(http.ListenAndServe(":"+Configs.Get("APP_PORT"), Router.GetRoutes()))
+	log.Print("Application: localhost:", Configs.Get("PORT"))
+	log.Fatal(http.ListenAndServe(":"+Configs.Get("PORT"), Router.GetRoutes()))
 }

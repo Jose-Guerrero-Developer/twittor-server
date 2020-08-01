@@ -5,50 +5,33 @@ import (
 	"log"
 	"time"
 
+	"github.com/Jose-Guerrero-Developer/twittorbackend/configs"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-// Connection mongo
-var Connection = connection()
-
-func connection() (client *mongo.Client) {
-	ctxConnection, cancelConnection := context.WithTimeout(context.Background(), 10*time.Second)
-	ctxCheckConnection, cancelCheckConnection := context.WithTimeout(context.Background(), 2*time.Second)
+/*_CreateClientDatabase create the instance with the mongo client */
+func _CreateClientDatabase() (*mongo.Client, error) {
+	ctxConnection, cancelConnection := context.WithTimeout(context.Background(), 10*time.Minute)
+	ctxCheckConnection, cancelCheckConnection := context.WithTimeout(context.Background(), 2*time.Minute)
 
 	defer func() {
 		cancelConnection()
 		cancelCheckConnection()
 	}()
 
-	client, err := mongo.Connect(ctxConnection, options.Client().ApplyURI("mongodb+srv://root:root@estudios.r04jg.mongodb.net/<dbname>?retryWrites=true&w=majority"))
+	var Configs configs.Driver
+	MongoClient, err := mongo.Connect(ctxConnection, options.Client().ApplyURI("mongodb+srv://"+Configs.Get("DATABASE_USERNAME")+":"+Configs.Get("DATABASE_PASSWORD")+"@"+Configs.Get("DATABASE_NAME")+".r04jg.mongodb.net/<dbname>?retryWrites=true&w=majority"))
 	if err != nil {
-		log.Fatal(err.Error())
-		return
+		return MongoClient, err
 	}
 
-	err = client.Ping(ctxCheckConnection, readpref.Primary())
+	err = MongoClient.Ping(ctxCheckConnection, readpref.Primary())
 	if err != nil {
-		log.Fatal(err.Error())
-		return
+		return MongoClient, err
 	}
-
 	log.Println("Conexión establecidad al servidor de base de datos")
-	return
-}
-
-// CheckConnectionStatus Check connection status
-func CheckConnectionStatus() (status bool, error string) {
-	status = true
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-	err := Connection.Ping(ctx, readpref.Primary())
-
-	if err != nil {
-		status = false
-		error = err.Error()
-	}
-
-	return
+	return MongoClient, nil
 }

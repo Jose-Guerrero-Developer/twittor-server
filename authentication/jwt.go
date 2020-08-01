@@ -2,29 +2,30 @@ package authentication
 
 import (
 	"errors"
-	"os"
 	"strings"
 	"time"
+
+	"github.com/Jose-Guerrero-Developer/twittorbackend/configs"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
 	"github.com/dgrijalva/jwt-go"
 )
 
-// Email email user
+/*Email return session email */
 var Email string
 
-// IDUser id user
+/*IDUser return session user id */
 var IDUser string
 
-// JWT struct
+/*JWT structure for managing authentication (JWT) */
 type JWT struct {
 	Token string `json:"token,omitempty"`
 }
 
-// GenerateToken generate access token
+/*GenerateToken return JWT generated access token */
 func GenerateToken(_User *models.User) (string, error) {
-	secret := []byte(os.Getenv("SECRET"))
-
+	var Configs configs.Driver
+	secret := []byte(Configs.Get("APP_SECRET"))
 	payload := jwt.MapClaims{
 		"_id":       _User.ID.Hex(),
 		"name":      _User.Name,
@@ -38,21 +39,20 @@ func GenerateToken(_User *models.User) (string, error) {
 		"webSite":   _User.Website,
 		"exp":       time.Now().Add(time.Hour * 1).Unix(),
 	}
-
 	signature := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 	token, err := signature.SignedString(secret)
 
 	if err != nil {
 		return token, err
 	}
-
 	return token, nil
 }
 
-// ValidateToken validate token access
+/*ValidateToken return access token validation */
 func ValidateToken(token string) (*models.ClaimJWT, bool, string, error) {
 	claims := &models.ClaimJWT{}
-	secret := []byte(os.Getenv("SECRET"))
+	var Configs configs.Driver
+	secret := []byte(Configs.Get("APP_SECRET"))
 
 	splitToken := strings.Split(token, "Bearer ")
 	if len(splitToken) != 2 {
@@ -69,15 +69,14 @@ func ValidateToken(token string) (*models.ClaimJWT, bool, string, error) {
 	}
 
 	if err == nil {
-		_User := new(models.User)
-		_User.Email = claims.Email
-		exists := _User.CheckExists()
+		var UserModel models.User
+		UserModel.Email = claims.Email
+		exists := UserModel.Exists()
 		if exists {
 			IDUser = claims.ID.Hex()
 			Email = claims.Email
 		}
 		return claims, exists, IDUser, nil
 	}
-
 	return claims, false, string(""), err
 }

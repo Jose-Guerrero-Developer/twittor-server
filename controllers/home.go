@@ -6,6 +6,6 @@ import "net/http"
 type HomeController struct{}
 
 /*Get returns information about the application */
-func (homeController *HomeController) Get(w http.ResponseWriter, r *http.Request) {
+func (Controller *HomeController) Get(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Application running..."))
 }

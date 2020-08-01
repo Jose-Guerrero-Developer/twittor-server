@@ -13,7 +13,7 @@ import (
 type ProfileController struct{}
 
 /*Get return a user profile by id */
-func (profileController *ProfileController) Get(w http.ResponseWriter, r *http.Request) {
+func (Controller *ProfileController) Get(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var Profile models.Profile

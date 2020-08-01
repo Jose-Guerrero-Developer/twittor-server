@@ -13,7 +13,7 @@ import (
 type UserController struct{}
 
 /*Store return stores a user in a database */
-func (userController *UserController) Store(w http.ResponseWriter, r *http.Request) {
+func (Controller *UserController) Store(w http.ResponseWriter, r *http.Request) {
 	var User models.User
 
 	err := json.NewDecoder(r.Body).Decode(&User)

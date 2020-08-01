@@ -16,7 +16,7 @@ import (
 type AuthController struct{}
 
 /*Sign return user login */
-func (authController *AuthController) Sign(w http.ResponseWriter, r *http.Request) {
+func (Controller *AuthController) Sign(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var User models.User

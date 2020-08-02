@@ -19,6 +19,16 @@ func (Controller *ProfileController) Get(w http.ResponseWriter, r *http.Request)
 
 	var Profile models.ProfileModel
 	ID := r.URL.Query().Get("id")
+	if len(ID) <= 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		response := utils.ResponseErrorJWT{
+			Code:        "011",
+			Message:     "Required parameter",
+			Description: "It is necessary to send in the application an id profile",
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 	err := Profile.Get(ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

@@ -24,7 +24,13 @@ func (Controller *AuthController) Sign(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&User)
 	if err != nil {
-		utils.ResponseError(w, http.StatusBadRequest, "001", "Error getting data", err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		response := utils.ResponseErrorJWT{
+			Code:        "001",
+			Message:     "Error getting data",
+			Description: "Impossible to generate access token. " + err.Error(),
+		}
+		json.NewEncoder(w).Encode(&response)
 		return
 	}
 

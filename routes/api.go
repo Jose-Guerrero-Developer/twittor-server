@@ -10,7 +10,7 @@ import (
 func (Controller *Driver) setRoutesAPI() {
 	/* route login */
 	var AuthController controllers.AuthController
-	subscribe("/api/login", middlewares.CheckConnectionStatus(AuthController.Sign)).Methods("POST")
+	subscribe("/api/sign", middlewares.CheckConnectionStatus(AuthController.Sign)).Methods("POST")
 	/* route users */
 	var UserController controllers.UserController
 	subscribe("/api/users", middlewares.CheckConnectionStatus(UserController.Store)).Methods("POST")

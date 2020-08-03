@@ -11,11 +11,11 @@ import (
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
 )
 
-/*TweetController tweet controller */
-type TweetController struct{}
+/*Tweet tweet controller */
+type Tweet struct{}
 
 /*Store tweetrecord invoegen in database */
-func (Controller *TweetController) Store(w http.ResponseWriter, r *http.Request) {
+func (Controller *Tweet) Store(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var err error
 	var status bool

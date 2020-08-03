@@ -12,11 +12,11 @@ import (
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
 )
 
-/*AuthController auth controller */
-type AuthController struct{}
+/*Auth auth controller */
+type Auth struct{}
 
 /*Sign return user login */
-func (Controller *AuthController) Sign(w http.ResponseWriter, r *http.Request) {
+func (Controller *Auth) Sign(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var User models.User
 	var Auth models.Auth

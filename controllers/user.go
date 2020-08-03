@@ -10,11 +10,11 @@ import (
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
 )
 
-/*UserController user controller */
-type UserController struct{}
+/*User user controller */
+type User struct{}
 
 /*Store return stores a user in a database */
-func (Controller *UserController) Store(w http.ResponseWriter, r *http.Request) {
+func (Controller *User) Store(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var User models.User
 	err := json.NewDecoder(r.Body).Decode(&User)

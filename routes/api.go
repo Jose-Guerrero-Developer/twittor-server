@@ -9,16 +9,16 @@ import (
 /*setRoutesAPI subscribe the routes to the *mux.Router instance */
 func (Controller *Driver) setRoutesAPI() {
 	/* routes auth */
-	var AuthController controllers.AuthController
-	subscribe("/api/sign", middlewares.CheckConnectionStatus(AuthController.Sign)).Methods("POST")
+	var Auth controllers.Auth
+	subscribe("/api/sign", middlewares.CheckConnectionStatus(Auth.Sign)).Methods("POST")
 	/* routes users */
-	var UserController controllers.UserController
-	subscribe("/api/users", middlewares.CheckConnectionStatus(UserController.Store)).Methods("POST")
+	var User controllers.User
+	subscribe("/api/users", middlewares.CheckConnectionStatus(User.Store)).Methods("POST")
 	/* routes profile */
-	var ProfileController controllers.ProfileController
-	subscribe("/api/profile", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(ProfileController.Get))).Methods("GET")
-	subscribe("/api/profile", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(ProfileController.Update))).Methods("PUT")
-	/* routes tweet */
-	var TweetController controllers.TweetController
-	subscribe("/api/tweet", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(TweetController.Store))).Methods("POST")
+	var Profile controllers.Profile
+	subscribe("/api/profiles", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(Profile.Get))).Methods("GET")
+	subscribe("/api/profiles", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(Profile.Update))).Methods("PUT")
+	/* routes tweets */
+	var Tweet controllers.Tweet
+	subscribe("/api/tweets", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(Tweet.Store))).Methods("POST")
 }

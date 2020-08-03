@@ -8,6 +8,6 @@ import (
 /*setRoutesWeb subscribe the routes to the *mux.Router instance */
 func (Controller *Driver) setRoutesWeb() {
 	/* route start */
-	var HomeController controllers.HomeController
-	subscribe("/", middlewares.CheckConnectionStatus(HomeController.Get)).Methods("GET")
+	var Home controllers.Home
+	subscribe("/", middlewares.CheckConnectionStatus(Home.Get)).Methods("GET")
 }

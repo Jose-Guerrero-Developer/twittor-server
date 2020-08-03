@@ -10,11 +10,11 @@ import (
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
 )
 
-/*ProfileController profile controller */
-type ProfileController struct{}
+/*Profile profile controller */
+type Profile struct{}
 
 /*Get return a user profile by id */
-func (Controller *ProfileController) Get(w http.ResponseWriter, r *http.Request) {
+func (Controller *Profile) Get(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var Profile models.Profile
 	ID := r.URL.Query().Get("id")
@@ -31,7 +31,7 @@ func (Controller *ProfileController) Get(w http.ResponseWriter, r *http.Request)
 }
 
 /*Update Update user profile in session */
-func (Controller *ProfileController) Update(w http.ResponseWriter, r *http.Request) {
+func (Controller *Profile) Update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var Profile models.Profile
 	err := json.NewDecoder(r.Body).Decode(&Profile)

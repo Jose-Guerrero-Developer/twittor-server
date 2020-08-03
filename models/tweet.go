@@ -18,6 +18,7 @@ type Tweet struct {
 func (Model *Tweet) Store() (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
+
 	Tweets := ORM.Collection("tweets")
 	Model.CreatedAt = time.Now()
 	_, err := Tweets.InsertOne(ctx, Model)

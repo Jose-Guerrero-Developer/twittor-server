@@ -26,6 +26,7 @@ func (Controller *Tweet) Store(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseFailed(w, "001", "Error getting data", err.Error(), http.StatusBadRequest)
 		return
 	}
+	Tweet.IDProfile = Profile.GetID()
 	if len(Tweet.IDProfile) <= 0 {
 		utils.ResponseFailed(w, "011", "Required parameter", "It is necessary to send in the application an id profile", http.StatusBadRequest)
 		return

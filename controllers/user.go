@@ -30,7 +30,7 @@ func (Controller *UserController) Store(w http.ResponseWriter, r *http.Request) 
 		utils.ResponseFailed(w, "003", "Field length", "Password is a field that must be at least 6 characters", http.StatusBadRequest)
 		return
 	}
-	if User.Exists() {
+	if User.ExistsEmail() {
 		utils.ResponseFailed(w, "004", "Duplicate data", "Email account is registered", http.StatusConflict)
 		return
 	}

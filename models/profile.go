@@ -9,13 +9,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-/*ProfileModel management structure for profile template */
-type ProfileModel struct {
+/*Profile management structure for profile template */
+type Profile struct {
 	User
 }
 
 /*Get return profile data */
-func (Model *ProfileModel) Get(ID string) error {
+func (Model *Profile) Get(ID string) error {
 	objID, _ := primitive.ObjectIDFromHex(ID)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -32,7 +32,7 @@ func (Model *ProfileModel) Get(ID string) error {
 }
 
 /*Update Update user profile in session */
-func (Model *ProfileModel) Update() (bool, bson.M, error) {
+func (Model *Profile) Update() (bool, bson.M, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 	Users := ORM.Collection("users")

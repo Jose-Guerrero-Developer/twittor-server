@@ -16,7 +16,7 @@ type ProfileController struct{}
 /*Get return a user profile by id */
 func (Controller *ProfileController) Get(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var Profile models.ProfileModel
+	var Profile models.Profile
 	ID := r.URL.Query().Get("id")
 	if len(ID) <= 0 {
 		utils.ResponseFailed(w, "011", "Required parameter", "It is necessary to send in the application an id profile", http.StatusBadRequest)
@@ -33,7 +33,7 @@ func (Controller *ProfileController) Get(w http.ResponseWriter, r *http.Request)
 /*Update Update user profile in session */
 func (Controller *ProfileController) Update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var Profile models.ProfileModel
+	var Profile models.Profile
 	err := json.NewDecoder(r.Body).Decode(&Profile)
 	if err != nil {
 		utils.ResponseFailed(w, "001", "Error getting data", err.Error(), http.StatusBadRequest)

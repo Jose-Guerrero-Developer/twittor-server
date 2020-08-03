@@ -8,13 +8,13 @@ import (
 type Auth struct{}
 
 /*Sign return user login */
-func (_Auth *Auth) Sign(UserModel *User) bool {
-	password := []byte(UserModel.Password)
-	exists := UserModel.Exists()
+func (Model *Auth) Sign(User *User) bool {
+	password := []byte(User.Password)
+	exists := User.ExistsEmail()
 	if !exists {
 		return false
 	}
-	passwordEncrypt := []byte(UserModel.Password)
+	passwordEncrypt := []byte(User.Password)
 	err := bcrypt.CompareHashAndPassword(passwordEncrypt, password)
 	if err != nil {
 		return false

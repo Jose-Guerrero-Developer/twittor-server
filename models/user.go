@@ -25,12 +25,24 @@ type User struct {
 	Website   string             `bson:"website" json:"website"`
 }
 
-/*Exists returns if a user exists */
-func (UserModel *User) Exists() bool {
+/*ExistsID returns if a user exists */
+func (Model *User) ExistsID() bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	Users := ORM.Collection("users")
-	err := Users.FindOne(ctx, bson.M{"email": UserModel.Email}).Decode(&UserModel)
+	err := Users.FindOne(ctx, bson.M{"_id": Model.ID}).Decode(&Model)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+/*ExistsEmail returns if a user exists */
+func (Model *User) ExistsEmail() bool {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	Users := ORM.Collection("users")
+	err := Users.FindOne(ctx, bson.M{"email": Model.Email}).Decode(&Model)
 	if err != nil {
 		return false
 	}
@@ -38,12 +50,12 @@ func (UserModel *User) Exists() bool {
 }
 
 /*Insert stores a user in a database */
-func (UserModel *User) Insert() (bool, string, error) {
+func (Model *User) Insert() (bool, string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	Users := ORM.Collection("users")
-	UserModel.Password, _ = utils.EncryptPassword(UserModel.Password)
-	record, err := Users.InsertOne(ctx, UserModel)
+	Model.Password, _ = utils.EncryptPassword(Model.Password)
+	record, err := Users.InsertOne(ctx, Model)
 	if err != nil {
 		return false, "", err
 	}

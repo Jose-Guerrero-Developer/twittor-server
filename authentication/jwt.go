@@ -17,20 +17,20 @@ type JWT struct {
 }
 
 /*GenerateToken return JWT generated access token */
-func GenerateToken(_User *models.User) (string, error) {
+func GenerateToken(User *models.User) (string, error) {
 	var Configs configs.Driver
 	secret := []byte(Configs.Get("APP_SECRET"))
 	payload := jwt.MapClaims{
-		"_id":       _User.ID.Hex(),
-		"name":      _User.Name,
-		"lastName":  _User.LastName,
-		"dateBirth": _User.DateBirth,
-		"email":     _User.Email,
-		"avatar":    _User.Avatar,
-		"banner":    _User.Banner,
-		"biography": _User.Biography,
-		"location":  _User.Location,
-		"webSite":   _User.Website,
+		"_id":       User.ID.Hex(),
+		"name":      User.Name,
+		"lastName":  User.LastName,
+		"dateBirth": User.DateBirth,
+		"email":     User.Email,
+		"avatar":    User.Avatar,
+		"banner":    User.Banner,
+		"biography": User.Biography,
+		"location":  User.Location,
+		"webSite":   User.Website,
 		"exp":       time.Now().Add(time.Hour * 1).Unix(),
 	}
 	signature := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
@@ -43,29 +43,29 @@ func GenerateToken(_User *models.User) (string, error) {
 
 /*ValidateToken return access token validation */
 func ValidateToken(token string) (*models.ClaimJWT, bool, string, error) {
-	claims := &models.ClaimJWT{}
+	Claims := &models.ClaimJWT{}
 	var Configs configs.Driver
 	secret := []byte(Configs.Get("APP_SECRET"))
 	splitToken := strings.Split(token, "Bearer ")
 	if len(splitToken) != 2 {
-		return claims, false, string(""), errors.New("Invalid token format")
+		return Claims, false, string(""), errors.New("Invalid token format")
 	}
 	token = strings.TrimSpace(splitToken[1])
-	signature, err := jwt.ParseWithClaims(token, claims, func(_token *jwt.Token) (interface{}, error) {
+	signature, err := jwt.ParseWithClaims(token, Claims, func(_token *jwt.Token) (interface{}, error) {
 		return secret, nil
 	})
 	if !signature.Valid {
-		return claims, false, string(""), errors.New("Invalid token format")
+		return Claims, false, string(""), errors.New("Invalid token format")
 	}
 	if err == nil {
-		var UserModel models.User
-		UserModel.Email = claims.Email
-		exists := UserModel.Exists()
+		var User models.User
+		User.Email = Claims.Email
+		exists := User.ExistsEmail()
 		if exists {
-			models.IDUser = claims.ID.Hex()
-			models.Email = claims.Email
+			models.IDUser = Claims.ID.Hex()
+			models.Email = Claims.Email
 		}
-		return claims, exists, models.IDUser, nil
+		return Claims, exists, models.IDUser, nil
 	}
-	return claims, false, string(""), err
+	return Claims, false, string(""), err
 }

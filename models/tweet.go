@@ -9,6 +9,7 @@ import (
 
 /*Tweet structure to manage tweet model */
 type Tweet struct {
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id"`
 	IDProfile primitive.ObjectID `bson:"_id_profile" json:"idProfile"`
 	Message   string             `bson:"message" json:"message"`
 	CreatedAt time.Time          `bson:"created_at" json:"createdAt"`

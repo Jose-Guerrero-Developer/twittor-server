@@ -23,8 +23,7 @@ func (Controller *Tweet) Store(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseFailed(w, "001", "Error getting data", err.Error(), http.StatusBadRequest)
 		return
 	}
-	Tweet.IDProfile = Profile.GetID()
-	if !Profile.ExistsID() {
+	if Tweet.IDProfile = Profile.GetID(); !Profile.ExistsID() {
 		utils.ResponseFailed(w, "012", "Resource in the found", "Profile id not found", http.StatusNotFound)
 		return
 	}

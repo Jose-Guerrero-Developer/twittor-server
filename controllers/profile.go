@@ -16,62 +16,35 @@ type ProfileController struct{}
 /*Get return a user profile by id */
 func (Controller *ProfileController) Get(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
 	var Profile models.ProfileModel
 	ID := r.URL.Query().Get("id")
 	if len(ID) <= 0 {
-		w.WriteHeader(http.StatusBadRequest)
-		response := utils.ResponseErrorJWT{
-			Code:        "011",
-			Message:     "Required parameter",
-			Description: "It is necessary to send in the application an id profile",
-		}
-		json.NewEncoder(w).Encode(response)
+		utils.ResponseFailed(w, "011", "Required parameter", "It is necessary to send in the application an id profile", http.StatusBadRequest)
 		return
 	}
 	err := Profile.Get(ID)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := utils.ResponseErrorJWT{
-			Code:        "008",
-			Message:     "Error obtaining data",
-			Description: err.Error(),
-		}
-		json.NewEncoder(w).Encode(response)
+		utils.ResponseFailed(w, "008", "Error obtaining data", err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	json.NewEncoder(w).Encode(Profile)
 }
 
 /*Update Update user profile in session */
 func (Controller *ProfileController) Update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
 	var Profile models.ProfileModel
-
 	err := json.NewDecoder(r.Body).Decode(&Profile)
 	if err != nil {
-		response := utils.ResponseErrorJWT{
-			Code:        "001",
-			Message:     "Error getting data",
-			Description: err.Error(),
-		}
-		json.NewEncoder(w).Encode(response)
+		utils.ResponseFailed(w, "001", "Error getting data", err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	status := true
 	var ProfileUpdate bson.M
 	status, ProfileUpdate, err = Profile.Update()
 	if err != nil || !status {
-		response := utils.ResponseErrorJWT{
-			Code:        "009",
-			Message:     "Error updating resource",
-			Description: err.Error(),
-		}
-		json.NewEncoder(w).Encode(response)
+		utils.ResponseFailed(w, "009", "Error updating resource", err.Error(), http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(ProfileUpdate)
+	utils.Response(w, ProfileUpdate, http.StatusOK)
 }

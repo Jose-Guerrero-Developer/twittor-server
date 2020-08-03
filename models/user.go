@@ -12,7 +12,7 @@ import (
 
 /*User structure to manage user model */
 type User struct {
-	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id"`
 	Name      string             `bson:"name" json:"name"`
 	LastName  string             `bson:"lastName" json:"lastName"`
 	DateBirth time.Time          `bson:"dateBirth" json:"dateBirth"`
@@ -29,10 +29,8 @@ type User struct {
 func (UserModel *User) Exists() bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
 	Users := ORM.Collection("users")
 	err := Users.FindOne(ctx, bson.M{"email": UserModel.Email}).Decode(&UserModel)
-
 	if err != nil {
 		return false
 	}
@@ -43,15 +41,12 @@ func (UserModel *User) Exists() bool {
 func (UserModel *User) Insert() (bool, string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
 	Users := ORM.Collection("users")
 	UserModel.Password, _ = utils.EncryptPassword(UserModel.Password)
-
 	record, err := Users.InsertOne(ctx, UserModel)
 	if err != nil {
 		return false, "", err
 	}
-
 	id, _ := record.InsertedID.(primitive.ObjectID)
 	return true, id.String(), err
 }

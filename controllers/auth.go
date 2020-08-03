@@ -18,53 +18,28 @@ type AuthController struct{}
 /*Sign return user login */
 func (Controller *AuthController) Sign(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
 	var User models.User
 	var Auth models.Auth
-
 	err := json.NewDecoder(r.Body).Decode(&User)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := utils.ResponseErrorJWT{
-			Code:        "001",
-			Message:     "Error getting data",
-			Description: "Impossible to generate access token. " + err.Error(),
-		}
-		json.NewEncoder(w).Encode(&response)
+		utils.ResponseFailed(w, "001", "Error getting data", err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	status := Auth.Sign(&User)
 	if !status {
-		w.WriteHeader(http.StatusUnauthorized)
-		response := utils.ResponseErrorJWT{
-			Code:        "006",
-			Message:     "Authentication",
-			Description: "Access credentials are inconsistent",
-		}
-		json.NewEncoder(w).Encode(&response)
+		utils.ResponseFailed(w, "006", "Authentication", "Access credentials are inconsistent", http.StatusUnauthorized)
 		return
 	}
-
 	token, err := authentication.GenerateToken(&User)
-
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := utils.ResponseErrorJWT{
-			Code:        "007",
-			Message:     "Authentication",
-			Description: "Impossible to generate access token. " + err.Error(),
-		}
-		json.NewEncoder(w).Encode(&response)
+		utils.ResponseFailed(w, "007", "Authentication", "Impossible to generate access token. "+err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	w.WriteHeader(http.StatusCreated)
 	signature := authentication.JWT{
 		Token: token,
 	}
 	json.NewEncoder(w).Encode(&signature)
-
 	expiresToken := time.Now().Add(1 * time.Hour)
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",

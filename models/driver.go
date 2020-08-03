@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/Jose-Guerrero-Developer/twittorbackend/database/orm"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/database/helpers"
 )
 
 /*Email return session email */
@@ -11,4 +11,4 @@ var Email string
 var IDUser string
 
 /*ORM retorna installs orm database */
-var ORM orm.Driver
+var ORM helpers.Driver

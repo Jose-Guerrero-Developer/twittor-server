@@ -20,12 +20,10 @@ func (Controller *Driver) LoadDriver() error {
 	if err := godotenv.Load(); err != nil {
 		return err
 	}
-
 	_Context = new(Driver)
 	_Context.storages = make(map[string]string)
 	_ConfigsApp()
 	_ConfigsDatabase()
-
 	if err := recover(); err != nil {
 		return errors.New("")
 	}

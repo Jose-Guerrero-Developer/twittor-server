@@ -35,7 +35,6 @@ func GenerateToken(_User *models.User) (string, error) {
 	}
 	signature := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 	token, err := signature.SignedString(secret)
-
 	if err != nil {
 		return token, err
 	}
@@ -47,21 +46,17 @@ func ValidateToken(token string) (*models.ClaimJWT, bool, string, error) {
 	claims := &models.ClaimJWT{}
 	var Configs configs.Driver
 	secret := []byte(Configs.Get("APP_SECRET"))
-
 	splitToken := strings.Split(token, "Bearer ")
 	if len(splitToken) != 2 {
 		return claims, false, string(""), errors.New("Invalid token format")
 	}
-
 	token = strings.TrimSpace(splitToken[1])
 	signature, err := jwt.ParseWithClaims(token, claims, func(_token *jwt.Token) (interface{}, error) {
 		return secret, nil
 	})
-
 	if !signature.Valid {
 		return claims, false, string(""), errors.New("Invalid token format")
 	}
-
 	if err == nil {
 		var UserModel models.User
 		UserModel.Email = claims.Email

@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/authentication"
@@ -14,13 +13,7 @@ func ValidateAccessToken(next http.HandlerFunc) http.HandlerFunc {
 		_, _, _, err := authentication.ValidateToken(r.Header.Get("Authorization"))
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusUnauthorized)
-			response := utils.ResponseErrorJWT{
-				Code:        "010",
-				Message:     "Error validate token",
-				Description: "Impossible to generate access token. " + err.Error(),
-			}
-			json.NewEncoder(w).Encode(&response)
+			utils.ResponseFailed(w, "010", "Error validate token", "Impossible to generate access token. "+err.Error(), http.StatusUnauthorized)
 			return
 		}
 		next.ServeHTTP(w, r)

@@ -2,23 +2,21 @@ package routes
 
 import (
 	"github.com/Jose-Guerrero-Developer/twittorbackend/controllers"
-
-	"github.com/Jose-Guerrero-Developer/twittorbackend/middlewares"
 )
 
 /*setRoutesAPI subscribe the routes to the *mux.Router instance */
 func (Controller *Driver) setRoutesAPI() {
 	/* routes auth */
 	var Auth controllers.Auth
-	subscribe("/api/sign", middlewares.CheckConnectionStatus(Auth.Sign)).Methods("POST")
+	subscribe("POST", "/api/sign", Auth.Sign, "CheckConnectionStatus")
 	/* routes users */
 	var User controllers.User
-	subscribe("/api/users", middlewares.CheckConnectionStatus(User.Store)).Methods("POST")
+	subscribe("POST", "/api/users", User.Store, "CheckConnectionStatus, ValidateAccessToken")
 	/* routes profile */
 	var Profile controllers.Profile
-	subscribe("/api/profiles", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(Profile.Get))).Methods("GET")
-	subscribe("/api/profiles", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(Profile.Update))).Methods("PUT")
+	subscribe("GET", "/api/profiles", Profile.Get, "CheckConnectionStatus, ValidateAccessToken")
+	subscribe("PUT", "/api/profiles", Profile.Update, "CheckConnectionStatus, ValidateAccessToken")
 	/* routes tweets */
 	var Tweet controllers.Tweet
-	subscribe("/api/tweets", middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(Tweet.Store))).Methods("POST")
+	subscribe("POST", "/api/tweets", Tweet.Store, "CheckConnectionStatus, ValidateAccessToken")
 }

@@ -11,12 +11,12 @@ func (Controller *Driver) setRoutesAPI() {
 	subscribe("POST", "/api/sign", Auth.Sign, "CheckConnectionStatus")
 	/* routes users */
 	var User controllers.User
-	subscribe("POST", "/api/users", User.Store, "CheckConnectionStatus, ValidateAccessToken")
+	subscribe("POST", "/api/users", User.Store, "CheckConnectionStatus, ValidateTokenAccess")
 	/* routes profile */
 	var Profile controllers.Profile
-	subscribe("GET", "/api/profiles", Profile.Get, "CheckConnectionStatus, ValidateAccessToken")
-	subscribe("PUT", "/api/profiles", Profile.Update, "CheckConnectionStatus, ValidateAccessToken")
+	subscribe("GET", "/api/profiles", Profile.Get, "CheckConnectionStatus, ValidateTokenAccess")
+	subscribe("PUT", "/api/profiles", Profile.Update, "CheckConnectionStatus, ValidateTokenAccess")
 	/* routes tweets */
 	var Tweet controllers.Tweet
-	subscribe("POST", "/api/tweets", Tweet.Store, "CheckConnectionStatus, ValidateAccessToken")
+	subscribe("POST", "/api/tweets", Tweet.Store, "CheckConnectionStatus, ValidateTokenAccess")
 }

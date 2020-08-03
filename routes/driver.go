@@ -45,10 +45,10 @@ func subscribe(method string, route string, resource func(http.ResponseWriter, *
 	switch validations {
 	case "CheckConnectionStatus":
 		_Context.subscribe(route, middlewares.CheckConnectionStatus(resource)).Methods(method)
-	case "ValidateAccessToken":
-		_Context.subscribe(route, middlewares.ValidateAccessToken(resource)).Methods(method)
-	case "CheckConnectionStatus, ValidateAccessToken":
-		_Context.subscribe(route, middlewares.CheckConnectionStatus(middlewares.ValidateAccessToken(resource))).Methods(method)
+	case "ValidateTokenAccess":
+		_Context.subscribe(route, middlewares.ValidateTokenAccess(resource)).Methods(method)
+	case "CheckConnectionStatus, ValidateTokenAccess":
+		_Context.subscribe(route, middlewares.CheckConnectionStatus(middlewares.ValidateTokenAccess(resource))).Methods(method)
 	default:
 		if validations == string("") {
 			_Context.subscribe(route, resource).Methods(method)

@@ -18,5 +18,6 @@ func (Controller *Driver) setRoutesAPI() {
 	subscribe("PUT", "/api/profiles", Profile.Update, "CheckConnectionStatus, ValidateTokenAccess")
 	/* routes tweets */
 	var Tweet controllers.Tweet
+	subscribe("GET", "/api/tweets/profile/{id}", Tweet.GetProfile, "CheckConnectionStatus, ValidateTokenAccess")
 	subscribe("POST", "/api/tweets", Tweet.Store, "CheckConnectionStatus, ValidateTokenAccess")
 }

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/configs"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
 	"github.com/dgrijalva/jwt-go"
@@ -18,8 +18,8 @@ type JWT struct {
 
 /*GenerateToken return JWT generated access token */
 func GenerateToken(User *models.User) (string, error) {
-	var Configs configs.Driver
-	secret := []byte(Configs.Get("APP_SECRET"))
+	var Galex galex.Driver
+	secret := []byte(Galex.Configs().Get("APP_SECRET"))
 	payload := jwt.MapClaims{
 		"_id":       User.ID.Hex(),
 		"name":      User.Name,
@@ -43,9 +43,9 @@ func GenerateToken(User *models.User) (string, error) {
 
 /*ValidateToken return access token validation */
 func ValidateToken(token string) (*models.ClaimJWT, bool, string, error) {
+	var Galex galex.Driver
 	Claims := &models.ClaimJWT{}
-	var Configs configs.Driver
-	secret := []byte(Configs.Get("APP_SECRET"))
+	secret := []byte(Galex.Configs().Get("APP_SECRET"))
 	splitToken := strings.Split(token, "Bearer ")
 	if len(splitToken) != 2 {
 		return Claims, false, string(""), errors.New("Invalid token format")

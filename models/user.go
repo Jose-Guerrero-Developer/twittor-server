@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/utils"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -12,6 +12,7 @@ import (
 
 /*User structure to manage user model */
 type User struct {
+	galex.Model
 	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id"`
 	Name      string             `bson:"name" json:"name"`
 	LastName  string             `bson:"lastName" json:"lastName"`
@@ -54,7 +55,7 @@ func (Model *User) Insert() (bool, string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	Users := ORM.Collection("users")
-	Model.Password, _ = utils.EncryptPassword(Model.Password)
+	Model.Password, _ = Model.Utils().Bcrypt.EncryptPassword(Model.Password)
 	record, err := Users.InsertOne(ctx, Model)
 	if err != nil {
 		return false, "", err

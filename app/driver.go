@@ -1,8 +1,8 @@
 package app
 
 import (
-	"github.com/Jose-Guerrero-Developer/twittorbackend/database"
 	"github.com/Jose-Guerrero-Developer/twittorbackend/configs"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/database"
 	"github.com/Jose-Guerrero-Developer/twittorbackend/routes"
 )
 

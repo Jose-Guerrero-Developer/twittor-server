@@ -1,33 +1,29 @@
 package configs
 
 import (
-	"errors"
 	"log"
 
 	"github.com/joho/godotenv"
 )
 
-/*_Context stores the status of the configuration driver */
+/*_Context Stores instance context */
 var _Context *Driver
 
-/*Driver structure manages configurations */
+/*Driver Package structure */
 type Driver struct {
 	storages map[string]string
 }
 
-/*LoadDriver sets the configuration driver instance */
-func (Controller *Driver) LoadDriver() error {
+/*GetDriver Returns the instance of the package */
+func GetDriver() *Driver {
 	if err := godotenv.Load(); err != nil {
-		return err
+		log.Fatal("Impossible to load configuration file")
 	}
 	_Context = new(Driver)
 	_Context.storages = make(map[string]string)
 	_ConfigsApp()
 	_ConfigsDatabase()
-	if err := recover(); err != nil {
-		return errors.New("")
-	}
-	return nil
+	return _Context
 }
 
 /*subscribe settings */

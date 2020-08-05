@@ -4,11 +4,11 @@ import (
 	"github.com/Jose-Guerrero-Developer/twittorbackend/database/helpers"
 )
 
-/*Email return session email */
+/*Email Return session email */
 var Email string
 
-/*IDUser return session user id */
+/*IDUser Return session user id */
 var IDUser string
 
-/*ORM retorna installs orm database */
+/*ORM Returns the ORM instance */
 var ORM helpers.Driver

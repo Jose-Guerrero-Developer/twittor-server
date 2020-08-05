@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/configs"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -22,8 +22,8 @@ func _CreateClientDatabase() (*mongo.Client, error) {
 		cancelCheckConnection()
 	}()
 
-	var Configs configs.Driver
-	MongoClient, err := mongo.Connect(ctxConnection, options.Client().ApplyURI("mongodb+srv://"+Configs.Get("DATABASE_USERNAME")+":"+Configs.Get("DATABASE_PASSWORD")+"@"+Configs.Get("DATABASE_NAME")+".r04jg.mongodb.net/<dbname>?retryWrites=true&w=majority"))
+	var Galex galex.Driver
+	MongoClient, err := mongo.Connect(ctxConnection, options.Client().ApplyURI("mongodb+srv://"+Galex.Configs().Get("DATABASE_USERNAME")+":"+Galex.Configs().Get("DATABASE_PASSWORD")+"@"+Galex.Configs().Get("DATABASE_NAME")+".r04jg.mongodb.net/<dbname>?retryWrites=true&w=majority"))
 	if err != nil {
 		return MongoClient, err
 	}

@@ -8,8 +8,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/authentication"
-
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
 )
 
@@ -22,6 +20,7 @@ type Auth struct {
 func (Controller *Auth) Sign(w http.ResponseWriter, r *http.Request) {
 	var User models.User
 	var Auth models.Auth
+	var JWT models.JWT
 	err := json.NewDecoder(r.Body).Decode(&User)
 	if err != nil {
 		Controller.Response().Failed("001", "Error getting data", err.Error(), http.StatusBadRequest)
@@ -32,7 +31,7 @@ func (Controller *Auth) Sign(w http.ResponseWriter, r *http.Request) {
 		Controller.Response().Failed("006", "Authentication", "Access credentials are inconsistent", http.StatusUnauthorized)
 		return
 	}
-	token, err := authentication.GenerateToken(&User)
+	token, err := JWT.GenerateToken(&User)
 	if err != nil {
 		Controller.Response().Failed("007", "Authentication", "Impossible to generate access token. "+err.Error(), http.StatusBadRequest)
 		return

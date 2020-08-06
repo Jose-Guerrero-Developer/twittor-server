@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -12,29 +12,28 @@ import (
 )
 
 /*Auth auth controller */
-type Auth struct {
-	galex.Controller
-}
+type Auth struct{}
 
 /*Sign return user login */
 func (Controller *Auth) Sign(w http.ResponseWriter, r *http.Request) {
 	var User models.User
 	var Auth models.Auth
 	var JWT models.JWT
+	var GalexResponse response.Driver
 	err := json.NewDecoder(r.Body).Decode(&User)
 	if err != nil {
-		Controller.Response().Failed("001", "Error getting data", err.Error(), http.StatusBadRequest)
+		GalexResponse.Failed("001", "Error getting data", err.Error(), http.StatusBadRequest)
 		return
 	}
 	status := Auth.Sign(&User)
 	if !status {
-		Controller.Response().Failed("006", "Authentication", "Access credentials are inconsistent", http.StatusUnauthorized)
+		GalexResponse.Failed("006", "Authentication", "Access credentials are inconsistent", http.StatusUnauthorized)
 		return
 	}
 	token, err := JWT.GenerateToken(&User)
 	if err != nil {
-		Controller.Response().Failed("007", "Authentication", "Impossible to generate access token. "+err.Error(), http.StatusBadRequest)
+		GalexResponse.Failed("007", "Authentication", "Impossible to generate access token. "+err.Error(), http.StatusBadRequest)
 		return
 	}
-	Controller.Response().Success(bson.M{"token": token}, http.StatusCreated)
+	GalexResponse.Success(bson.M{"token": token}, http.StatusCreated)
 }

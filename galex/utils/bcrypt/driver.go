@@ -1,4 +1,4 @@
 package bcrypt
 
-/*Driver Package structure */
+/*Driver Source of the package */
 type Driver struct{}

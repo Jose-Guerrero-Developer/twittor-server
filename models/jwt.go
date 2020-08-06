@@ -5,7 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/configuration"
+
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -19,8 +20,8 @@ type JWT struct {
 
 /*GenerateToken return JWT generated access token */
 func (Model *JWT) GenerateToken(User *User) (string, error) {
-	var Galex galex.Driver
-	secret := []byte(Galex.Configs().Get("APP_SECRET"))
+	var GalexConfigs configuration.Driver
+	secret := []byte(GalexConfigs.Get("APP_SECRET"))
 	payload := jwt.MapClaims{
 		"_id":       User.ID.Hex(),
 		"name":      User.Name,
@@ -44,9 +45,9 @@ func (Model *JWT) GenerateToken(User *User) (string, error) {
 
 /*ValidateToken return access token validation */
 func (Model *JWT) ValidateToken(token string) (*JWT, bool, string, error) {
-	var Galex galex.Driver
+	var GalexConfigs configuration.Driver
 	Claims := &JWT{}
-	secret := []byte(Galex.Configs().Get("APP_SECRET"))
+	secret := []byte(GalexConfigs.Get("APP_SECRET"))
 	splitToken := strings.Split(token, "Bearer ")
 	if len(splitToken) != 2 {
 		return Claims, false, string(""), errors.New("Invalid token format")
@@ -63,10 +64,10 @@ func (Model *JWT) ValidateToken(token string) (*JWT, bool, string, error) {
 		User.Email = Claims.Email
 		exists := User.ExistsEmail()
 		if exists {
-			IDUser = Claims.ID.Hex()
-			Email = Claims.Email
+			IDProfile = Claims.ID.Hex()
+			EmailProfile = Claims.Email
 		}
-		return Claims, exists, IDUser, nil
+		return Claims, exists, IDProfile, nil
 	}
 	return Claims, false, string(""), err
 }

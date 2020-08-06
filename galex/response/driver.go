@@ -1,9 +1,4 @@
 package response
 
-/*Driver Package structure */
+/*Driver Source of the package */
 type Driver struct{}
-
-/*GetDriver Returns the instance of the package */
-func GetDriver() *Driver {
-	return new(Driver)
-}

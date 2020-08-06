@@ -7,8 +7,8 @@ import (
 )
 
 /*Success returns a response structure in json format */
-func (Controller *Driver) Success(data interface{}, statusHTTP int) {
-	var URL = new(url.Driver).GetContext()
-	URL.Writer.WriteHeader(statusHTTP)
-	json.NewEncoder(URL.Writer).Encode(data)
+func (Http *Driver) Success(data interface{}, statusHTTP int) {
+	var GalexURL url.Driver
+	GalexURL.WriteHeader(statusHTTP)
+	json.NewEncoder(GalexURL.GetWriter()).Encode(data)
 }

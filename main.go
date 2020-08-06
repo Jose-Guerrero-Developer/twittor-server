@@ -1,8 +1,13 @@
 package main
 
-import App "github.com/Jose-Guerrero-Developer/twittorbackend/app"
+import (
+	"log"
 
-/*main Initialize the components of the application */
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/core"
+)
+
 func main() {
-	App.Run()
+	if err := core.Run(); err != nil {
+		log.Fatal(err.Error())
+	}
 }

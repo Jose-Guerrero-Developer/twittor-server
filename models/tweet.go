@@ -5,7 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/pagination"
+
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/database/helpers"
 
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -15,8 +17,7 @@ import (
 
 /*Tweet structure to manage tweet model */
 type Tweet struct {
-	galex.Model
-	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id"`
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 	IDProfile primitive.ObjectID `bson:"_id_profile" json:"idProfile"`
 	Message   string             `bson:"message" json:"message"`
 	CreatedAt time.Time          `bson:"created_at" json:"createdAt"`
@@ -27,16 +28,18 @@ func (Model *Tweet) GetProfile(IDProfile primitive.ObjectID) ([]*Tweet, bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
+	var GalexORM helpers.Driver
+	var GalexPagination pagination.Driver
 	var results []*Tweet
 	var record Tweet
-	Tweets := ORM.Collection("tweets")
+	Tweets := GalexORM.Collection("tweets")
 	filter := bson.M{
 		"_id_profile": IDProfile,
 	}
 	opts := options.Find()
-	opts.SetLimit(Model.Utils().Pagination.GetCount())
+	opts.SetLimit(GalexPagination.GetCount())
 	opts.SetSort(bson.D{{Key: "created_at", Value: -1}})
-	opts.SetSkip((Model.Utils().Pagination.GetPage() - 1) * Model.Utils().Pagination.GetCount())
+	opts.SetSkip((GalexPagination.GetPage() - 1) * GalexPagination.GetCount())
 	cursor, err := Tweets.Find(ctx, filter, opts)
 	if err != nil {
 		return results, false
@@ -56,7 +59,8 @@ func (Model *Tweet) Store() (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	Tweets := ORM.Collection("tweets")
+	var GalexORM helpers.Driver
+	Tweets := GalexORM.Collection("tweets")
 	Model.CreatedAt = time.Now()
 	_, err := Tweets.InsertOne(ctx, Model)
 	if err != nil {

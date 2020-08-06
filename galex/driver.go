@@ -3,6 +3,8 @@ package galex
 import (
 	"errors"
 
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/middlewares"
+
 	"github.com/Jose-Guerrero-Developer/twittorbackend/configs"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
@@ -17,9 +19,10 @@ type Driver struct {
 	*_Packages
 	*Controller
 	_IoC struct {
-		Utils    *utils.Driver
-		Configs  *configs.Driver
-		Response *response.Driver
+		Utils       *utils.Driver
+		Configs     *configs.Driver
+		Response    *response.Driver
+		Middlewares *middlewares.Driver
 	}
 }
 
@@ -29,6 +32,7 @@ func GetDriver() (*Driver, error) {
 	_Context._IoC.Utils = utils.LoadDriver()
 	_Context._IoC.Configs = configs.GetDriver()
 	_Context._IoC.Response = response.GetDriver()
+	_Context._IoC.Middlewares = middlewares.GetDriver()
 	if err := recover(); err != nil {
 		return _Context, errors.New("Error loading Galex component instances")
 	}

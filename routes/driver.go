@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	GalexMiddlewares "github.com/Jose-Guerrero-Developer/twittorbackend/galex/middlewares"
 	"github.com/Jose-Guerrero-Developer/twittorbackend/middlewares"
 
 	"github.com/gorilla/mux"
@@ -36,6 +37,9 @@ func (Controller *Driver) LoadDriver() error {
 func (Controller *Driver) GetRoutes() http.Handler {
 	_Context.setRoutesAPI()
 	_Context.setRoutesWeb()
+	var GalexMiddlewares GalexMiddlewares.Driver
+	_Context.router.Use(GalexMiddlewares.InitiateLifeCycle)
+	_Context.router.Use(GalexMiddlewares.CheckStatusDatabaseConnection)
 	_Context.routes = cors.AllowAll().Handler(_Context.router)
 	return _Context.routes
 }
@@ -43,12 +47,8 @@ func (Controller *Driver) GetRoutes() http.Handler {
 /*subscribe records the routes in the *mux instance */
 func subscribe(method string, route string, resource func(http.ResponseWriter, *http.Request), validations string) {
 	switch validations {
-	case "CheckConnectionStatus":
-		_Context.subscribe(route, middlewares.CheckConnectionStatus(resource)).Methods(method)
 	case "ValidateTokenAccess":
 		_Context.subscribe(route, middlewares.ValidateTokenAccess(resource)).Methods(method)
-	case "CheckConnectionStatus, ValidateTokenAccess":
-		_Context.subscribe(route, middlewares.CheckConnectionStatus(middlewares.ValidateTokenAccess(resource))).Methods(method)
 	default:
 		if validations == string("") {
 			_Context.subscribe(route, resource).Methods(method)

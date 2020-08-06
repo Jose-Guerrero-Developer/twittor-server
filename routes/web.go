@@ -8,5 +8,5 @@ import (
 func (Controller *Driver) setRoutesWeb() {
 	/* route start */
 	var Home controllers.Home
-	subscribe("GET", "/", Home.Get, "CheckConnectionStatus")
+	subscribe("GET", "/", Home.Get, "")
 }

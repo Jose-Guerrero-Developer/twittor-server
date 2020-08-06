@@ -26,6 +26,7 @@ func (Configuration *Driver) EstablishDriver() error {
 
 /*Subscribe settings */
 func Subscribe(key string, value string, defaultValue string) {
+	log.Println("key: ", key, " | value: ", value, " | default: ", defaultValue)
 	if len(key) <= 0 {
 		log.Println("Length of the configuration key is required")
 	}

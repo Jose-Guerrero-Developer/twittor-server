@@ -29,4 +29,5 @@ func API() {
 	subscribe("GET", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.GetID))
 	subscribe("GET", "/api/tweets/profile/{id}", middlewares.ValidateTokenAccess(Tweet.GetProfile))
 	subscribe("POST", "/api/tweets", middlewares.ValidateTokenAccess(Tweet.Store))
+	subscribe("DELETE", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.Delete))
 }

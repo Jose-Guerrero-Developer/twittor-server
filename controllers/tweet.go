@@ -95,3 +95,17 @@ func (Controller *Tweet) Store(w http.ResponseWriter, r *http.Request) {
 	}
 	GalexResponse.Success(bson.M{}, http.StatusCreated)
 }
+
+/*Delete Remove tweet */
+func (Controller *Tweet) Delete(w http.ResponseWriter, r *http.Request) {
+	var GalexResponse response.Driver
+	var Tweet models.Tweet
+
+	params := mux.Vars(r)
+	IDTweet := params["id"]
+	if err := Tweet.Delete(IDTweet); err == nil {
+		GalexResponse.Success(bson.M{}, http.StatusOK)
+	} else {
+		GalexResponse.Failed("013", "Remove resource", err.Error(), http.StatusBadRequest)
+	}
+}

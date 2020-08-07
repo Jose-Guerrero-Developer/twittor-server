@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"errors"
 	"log"
 	"strconv"
 	"time"
@@ -71,7 +72,7 @@ func (Model *Tweet) GetID(IDTweet string) (*Tweet, error) {
 	return Model, nil
 }
 
-/*GetProfile return all tweets in a profile */
+/*GetProfile Return all tweets in a profile */
 func (Model *Tweet) GetProfile(IDProfile primitive.ObjectID) ([]*Tweet, bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
@@ -102,7 +103,7 @@ func (Model *Tweet) GetProfile(IDProfile primitive.ObjectID) ([]*Tweet, bool) {
 	return results, true
 }
 
-/*Store register a tweet in the database */
+/*Store Register a tweet in the database */
 func (Model *Tweet) Store() (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
@@ -115,4 +116,22 @@ func (Model *Tweet) Store() (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+/*Delete Remove a tweet */
+func (Model *Tweet) Delete(IDTweet string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	var GalexORM helpers.Driver
+	Tweets := GalexORM.Collection("tweets")
+	id, _ := primitive.ObjectIDFromHex(IDTweet)
+	filter := bson.M{
+		"_id": id,
+	}
+	result, err := Tweets.DeleteOne(ctx, filter)
+	if err != nil || result.DeletedCount < 1 {
+		return errors.New("It is not possible to remove the resource")
+	}
+	return nil
 }

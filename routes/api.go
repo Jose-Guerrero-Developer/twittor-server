@@ -25,6 +25,7 @@ func API() {
 
 	/* routes tweets */
 	var Tweet controllers.Tweet
+	subscribe("GET", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.Get))
 	subscribe("GET", "/api/tweets/profile/{id}", middlewares.ValidateTokenAccess(Tweet.GetProfile))
 	subscribe("POST", "/api/tweets", middlewares.ValidateTokenAccess(Tweet.Store))
 }

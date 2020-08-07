@@ -23,6 +23,24 @@ type Tweet struct {
 	CreatedAt time.Time          `bson:"created_at" json:"createdAt"`
 }
 
+/*Get Return tweet */
+func (Model *Tweet) Get(IDTweet string) (*Tweet, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	var GalexORM helpers.Driver
+	Tweets := GalexORM.Collection("tweets")
+	id, _ := primitive.ObjectIDFromHex(IDTweet)
+	filter := bson.M{
+		"_id": id,
+	}
+	err := Tweets.FindOne(ctx, filter).Decode(&Model)
+	if err != nil {
+		return Model, err
+	}
+	return Model, nil
+}
+
 /*GetProfile return all tweets in a profile */
 func (Model *Tweet) GetProfile(IDProfile primitive.ObjectID) ([]*Tweet, bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
@@ -31,7 +49,6 @@ func (Model *Tweet) GetProfile(IDProfile primitive.ObjectID) ([]*Tweet, bool) {
 	var GalexORM helpers.Driver
 	var GalexPagination pagination.Driver
 	var results []*Tweet
-	var record Tweet
 	Tweets := GalexORM.Collection("tweets")
 	filter := bson.M{
 		"_id_profile": IDProfile,
@@ -45,6 +62,7 @@ func (Model *Tweet) GetProfile(IDProfile primitive.ObjectID) ([]*Tweet, bool) {
 		return results, false
 	}
 	for cursor.Next(ctx) {
+		var record Tweet
 		if err := cursor.Decode(&record); err != nil {
 			log.Println("Impossible transforms data tweet GetProfile")
 			continue

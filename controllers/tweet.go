@@ -18,6 +18,26 @@ import (
 /*Tweet tweet controller */
 type Tweet struct{}
 
+/*Get return tweet */
+func (Controller *Tweet) Get(w http.ResponseWriter, r *http.Request) {
+	var Tweet models.Tweet
+	var GalexResponse response.Driver
+
+	params := mux.Vars(r)
+	IDTweet := params["id"]
+	if len(IDTweet) < 1 {
+		GalexResponse.Failed("011", "Required parameter", "It is necessary to send in the application an id profile", http.StatusBadRequest)
+		return
+	}
+
+	result, err := Tweet.Get(IDTweet)
+	if err != nil {
+		GalexResponse.Success(bson.M{}, http.StatusNotFound)
+		return
+	}
+	GalexResponse.Success(result, http.StatusOK)
+}
+
 /*GetProfile return all tweets in a profile */
 func (Controller *Tweet) GetProfile(w http.ResponseWriter, r *http.Request) {
 	var GalexResponse response.Driver

@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/pagination"
@@ -23,8 +24,37 @@ type Tweet struct {
 	CreatedAt time.Time          `bson:"created_at" json:"createdAt"`
 }
 
-/*Get Return tweet */
-func (Model *Tweet) Get(IDTweet string) (*Tweet, error) {
+/*Get Return all tweet */
+func (Model *Tweet) Get() ([]*Tweet, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	var GalexORM helpers.Driver
+	var GalexPagination pagination.Driver
+	var results []*Tweet
+	Tweets := GalexORM.Collection("tweets")
+	opts := options.Find()
+	opts.SetLimit(GalexPagination.GetCount())
+	opts.SetSort(bson.D{{Key: "created_at", Value: -1}})
+	opts.SetSkip((GalexPagination.GetPage() - 1) * GalexPagination.GetCount())
+	cursor, err := Tweets.Find(ctx, bson.M{}, opts)
+	if err != nil {
+		return results, err
+	}
+	for cursor.Next(ctx) {
+		var record Tweet
+		if err := cursor.Decode(&record); err != nil {
+			log.Println("Impossible transforms data tweet GetProfile")
+			continue
+		}
+		results = append(results, &record)
+	}
+	GalexPagination.AddHeader("X-Total-Count", strconv.Itoa(len(results)))
+	return results, nil
+}
+
+/*GetID Return tweet id */
+func (Model *Tweet) GetID(IDTweet string) (*Tweet, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 

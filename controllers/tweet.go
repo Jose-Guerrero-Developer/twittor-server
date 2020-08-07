@@ -18,8 +18,19 @@ import (
 /*Tweet tweet controller */
 type Tweet struct{}
 
-/*Get return tweet */
+/*Get Returns all tweets */
 func (Controller *Tweet) Get(w http.ResponseWriter, r *http.Request) {
+	var Tweet models.Tweet
+	var GalexResponse response.Driver
+	if results, err := Tweet.Get(); err == nil {
+		GalexResponse.Success(results, http.StatusOK)
+	} else {
+		GalexResponse.Success(bson.M{}, http.StatusOK)
+	}
+}
+
+/*GetID return tweet id */
+func (Controller *Tweet) GetID(w http.ResponseWriter, r *http.Request) {
 	var Tweet models.Tweet
 	var GalexResponse response.Driver
 
@@ -30,7 +41,7 @@ func (Controller *Tweet) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := Tweet.Get(IDTweet)
+	result, err := Tweet.GetID(IDTweet)
 	if err != nil {
 		GalexResponse.Success(bson.M{}, http.StatusNotFound)
 		return

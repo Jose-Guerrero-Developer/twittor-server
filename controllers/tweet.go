@@ -96,6 +96,25 @@ func (Controller *Tweet) Store(w http.ResponseWriter, r *http.Request) {
 	GalexResponse.Success(bson.M{}, http.StatusCreated)
 }
 
+/*Update Update tweet */
+func (Controller *Tweet) Update(w http.ResponseWriter, r *http.Request) {
+	var Tweet models.Tweet
+	var GalexResponse response.Driver
+
+	params := mux.Vars(r)
+	IDTweet := params["id"]
+	err := json.NewDecoder(r.Body).Decode(&Tweet)
+	if err != nil {
+		GalexResponse.Failed("001", "Error getting data", err.Error(), http.StatusBadRequest)
+		return
+	}
+	if result, err := Tweet.Update(IDTweet); err == nil {
+		GalexResponse.Success(result, http.StatusOK)
+	} else {
+		GalexResponse.Failed("009", "Error updating resource", err.Error(), http.StatusBadRequest)
+	}
+}
+
 /*Delete Remove tweet */
 func (Controller *Tweet) Delete(w http.ResponseWriter, r *http.Request) {
 	var GalexResponse response.Driver

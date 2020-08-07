@@ -118,6 +118,33 @@ func (Model *Tweet) Store() (bool, error) {
 	return true, nil
 }
 
+/*Update Update tweet */
+func (Model *Tweet) Update(IDTweet string) (*Tweet, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	var GalexORM helpers.Driver
+	id, _ := primitive.ObjectIDFromHex(IDTweet)
+	Tweets := GalexORM.Collection("tweets")
+
+	data := make(map[string]interface{})
+	if !Model.IDProfile.IsZero() {
+		data["_id_profile"] = Model.IDProfile
+	}
+	if Model.Message != "" {
+		data["message"] = Model.Message
+	}
+	filter := bson.M{"_id": bson.M{"$eq": id}}
+	_, err := Tweets.UpdateOne(ctx, filter, bson.M{"$set": data})
+	if err != nil {
+		return Model, err
+	}
+	if err := Tweets.FindOne(ctx, filter).Decode(&Model); err != nil {
+		return Model, err
+	}
+	return Model, nil
+}
+
 /*Delete Remove a tweet */
 func (Model *Tweet) Delete(IDTweet string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)

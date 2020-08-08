@@ -27,12 +27,12 @@ type Tweet struct {
 
 /*Get Returns all tweets */
 func (Model *Tweet) Get() ([]*Tweet, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-
 	var data []*Tweet
 	var GalexORM helpers.Driver
 	var GalexPagination pagination.Driver
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
 
 	Tweets := GalexORM.Collection("tweets")
 	opts := options.Find()
@@ -57,10 +57,11 @@ func (Model *Tweet) Get() ([]*Tweet, error) {
 
 /*GetID Return tweet ID */
 func (Model *Tweet) GetID(IDTweet string) (*Tweet, error) {
+	var GalexORM helpers.Driver
+
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	var GalexORM helpers.Driver
 	Tweets := GalexORM.Collection("tweets")
 	ID, _ := primitive.ObjectIDFromHex(IDTweet)
 	filter := bson.M{"_id": bson.M{"$eq": ID}}
@@ -72,12 +73,12 @@ func (Model *Tweet) GetID(IDTweet string) (*Tweet, error) {
 
 /*GetProfile Return all tweets in a profile */
 func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, bool) {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-
 	var data []*Tweet
 	var GalexORM helpers.Driver
 	var GalexPagination pagination.Driver
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
 
 	Tweets := GalexORM.Collection("tweets")
 	ID, _ := primitive.ObjectIDFromHex(IDProfile)
@@ -103,10 +104,10 @@ func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, bool) {
 
 /*Store Store a tweet in the database */
 func (Model *Tweet) Store() (bool, error) {
+	var GalexORM helpers.Driver
+
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-
-	var GalexORM helpers.Driver
 
 	Tweets := GalexORM.Collection("tweets")
 	Model.CreatedAt = time.Now()
@@ -118,10 +119,10 @@ func (Model *Tweet) Store() (bool, error) {
 
 /*Update Update a tweet in the database */
 func (Model *Tweet) Update(IDTweet string) (*Tweet, error) {
+	var GalexORM helpers.Driver
+
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-
-	var GalexORM helpers.Driver
 
 	ID, _ := primitive.ObjectIDFromHex(IDTweet)
 	Tweets := GalexORM.Collection("tweets")
@@ -144,10 +145,10 @@ func (Model *Tweet) Update(IDTweet string) (*Tweet, error) {
 
 /*Delete Delete a tweet in the database */
 func (Model *Tweet) Delete(IDTweet string) error {
+	var GalexORM helpers.Driver
+
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-
-	var GalexORM helpers.Driver
 
 	Tweets := GalexORM.Collection("tweets")
 	ID, _ := primitive.ObjectIDFromHex(IDTweet)

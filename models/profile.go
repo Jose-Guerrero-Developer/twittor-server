@@ -16,13 +16,6 @@ type Profile struct {
 	User
 }
 
-/*GetID return the ID profile */
-func (Model *Profile) GetID() primitive.ObjectID {
-	ID, _ := primitive.ObjectIDFromHex(IDProfile)
-	Model.ID = ID
-	return ID
-}
-
 /*Get return profile data */
 func (Model *Profile) Get(ID string) error {
 	objID, _ := primitive.ObjectIDFromHex(ID)

@@ -34,13 +34,14 @@ var EmailProfile string
 var IDProfile string
 
 /*ExistsID returns if a user exists */
-func (Model *User) ExistsID() bool {
+func (Model *User) ExistsID(IDProfile string) bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	var GalexORM helpers.Driver
 	Users := GalexORM.Collection("users")
-	err := Users.FindOne(ctx, bson.M{"_id": Model.ID}).Decode(&Model)
+	ID, _ := primitive.ObjectIDFromHex(IDProfile)
+	err := Users.FindOne(ctx, bson.M{"_id": bson.M{"$eq": ID}}).Decode(&Model)
 	if err != nil {
 		return false
 	}

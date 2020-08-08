@@ -10,20 +10,17 @@ var subscribe = router.Subscribe
 
 /*API subscribe the routes to the *mux.Router instance */
 func API() {
-	/* route start */
+	/* Route Start */
 	var Auth controllers.Auth
 	subscribe("POST", "/api/sign", Auth.Sign)
-
-	/* routes users */
+	/* Routes Users */
 	var User controllers.User
 	subscribe("POST", "/api/users", middlewares.ValidateTokenAccess(User.Store))
-
-	/* routes profile */
+	/* Routes Profile */
 	var Profile controllers.Profile
 	subscribe("GET", "/api/profiles", middlewares.ValidateTokenAccess(Profile.Get))
 	subscribe("PUT", "/api/profiles", middlewares.ValidateTokenAccess(Profile.Update))
-
-	/* routes tweets */
+	/* Routes Tweets */
 	var Tweet controllers.Tweet
 	subscribe("GET", "/api/tweets", middlewares.ValidateTokenAccess(Tweet.Get))
 	subscribe("GET", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.GetID))

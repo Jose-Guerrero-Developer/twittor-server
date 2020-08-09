@@ -27,12 +27,6 @@ type User struct {
 	Website   string             `bson:"website" json:"website"`
 }
 
-/*EmailProfile Return session email */
-var EmailProfile string
-
-/*IDProfile Return session user id */
-var IDProfile string
-
 /*ExistsID returns if a user exists */
 func (Model *User) ExistsID(IDProfile string) bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

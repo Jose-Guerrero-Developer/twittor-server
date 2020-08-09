@@ -19,7 +19,7 @@ func API() {
 	/* Routes Profile */
 	var Profile controllers.Profile
 	subscribe("GET", "/api/profiles", middlewares.ValidateTokenAccess(Profile.Get))
-	subscribe("PUT", "/api/profiles", middlewares.ValidateTokenAccess(Profile.Update))
+	subscribe("PUT", "/api/profiles/{id}", middlewares.ValidateTokenAccess(Profile.Update))
 	/* Routes Tweets */
 	var Tweet controllers.Tweet
 	subscribe("GET", "/api/tweets", middlewares.ValidateTokenAccess(Tweet.Get))
@@ -28,4 +28,7 @@ func API() {
 	subscribe("POST", "/api/tweets", middlewares.ValidateTokenAccess(Tweet.Store))
 	subscribe("PUT", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.Update))
 	subscribe("DELETE", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.Delete))
+	/* Routes Uploads */
+	var Upload controllers.Upload
+	subscribe("POST", "/api/profiles/{id}/upload/avatar", middlewares.ValidateTokenAccess(Upload.Avatar))
 }

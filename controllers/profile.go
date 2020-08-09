@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -33,16 +35,19 @@ func (Controller *Profile) Get(w http.ResponseWriter, r *http.Request) {
 
 /*Update Update user profile in session */
 func (Controller *Profile) Update(w http.ResponseWriter, r *http.Request) {
-	var GalexResponse response.Driver
+	var ProfileUpdate bson.M
 	var Profile models.Profile
+	var GalexResponse response.Driver
+
+	params := mux.Vars(r)
+	IDProfile := params["id"]
 	err := json.NewDecoder(r.Body).Decode(&Profile)
 	if err != nil {
 		GalexResponse.Failed("001", "Error getting data", err.Error(), http.StatusBadRequest)
 		return
 	}
 	status := true
-	var ProfileUpdate bson.M
-	status, ProfileUpdate, err = Profile.Update()
+	status, ProfileUpdate, err = Profile.Update(IDProfile)
 	if err != nil || !status {
 		GalexResponse.Failed("009", "Error updating resource", err.Error(), http.StatusBadRequest)
 		return

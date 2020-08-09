@@ -36,13 +36,13 @@ func (Model *Profile) Get(ID string) error {
 }
 
 /*Update Update user profile in session */
-func (Model *Profile) Update() (bool, bson.M, error) {
+func (Model *Profile) Update(ID string) (bool, bson.M, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var GalexORM helpers.Driver
 	Users := GalexORM.Collection("users")
-	IDProfile, _ := primitive.ObjectIDFromHex(IDProfile)
+	IDProfile, _ := primitive.ObjectIDFromHex(ID)
 	Record := make(map[string]interface{})
 	if Model.Name != "" {
 		Record["name"] = Model.Name

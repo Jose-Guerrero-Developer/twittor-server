@@ -31,4 +31,5 @@ func API() {
 	/* Routes Uploads */
 	var Upload controllers.Upload
 	subscribe("POST", "/api/profiles/{id}/upload/avatar", middlewares.ValidateTokenAccess(Upload.Avatar))
+	subscribe("POST", "/api/profiles/{id}/upload/banner", middlewares.ValidateTokenAccess(Upload.Banner))
 }

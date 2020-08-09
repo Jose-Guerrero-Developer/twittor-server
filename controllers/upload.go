@@ -39,10 +39,7 @@ func (Controller *Upload) Avatar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if Profile.Get(IDProfile); Profile.Avatar != "" {
-		if err := os.Remove(path + Profile.Avatar); err != nil {
-			GalexResponse.Failed("017", "Error deleting image", err.Error(), http.StatusBadRequest)
-			return
-		}
+		os.Remove(path + Profile.Avatar)
 	}
 	open, err = os.OpenFile(file, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {

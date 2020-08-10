@@ -32,8 +32,7 @@ func (Model *User) ExistsID(IDProfile string) bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	var GalexORM helpers.Driver
-	Users := GalexORM.Collection("users")
+	var Users = helpers.EstablishDriver("users")
 	ID, _ := primitive.ObjectIDFromHex(IDProfile)
 	err := Users.FindOne(ctx, bson.M{"_id": bson.M{"$eq": ID}}).Decode(&Model)
 	if err != nil {
@@ -47,8 +46,7 @@ func (Model *User) ExistsEmail() bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	var GalexORM helpers.Driver
-	Users := GalexORM.Collection("users")
+	var Users = helpers.EstablishDriver("users")
 	err := Users.FindOne(ctx, bson.M{"email": Model.Email}).Decode(&Model)
 	if err != nil {
 		return false
@@ -61,9 +59,8 @@ func (Model *User) Store() (bool, string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	var GalexORM helpers.Driver
 	var GalexBcrypt bcrypt.Driver
-	Users := GalexORM.Collection("users")
+	var Users = helpers.EstablishDriver("users")
 	Model.Password, _ = GalexBcrypt.EncryptPassword(Model.Password)
 	record, err := Users.InsertOne(ctx, Model)
 	if err != nil {

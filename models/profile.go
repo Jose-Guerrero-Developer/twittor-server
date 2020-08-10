@@ -22,8 +22,7 @@ func (Model *Profile) Get(ID string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	var GalexORM helpers.Driver
-	Users := GalexORM.Collection("users")
+	var Users = helpers.EstablishDriver("users")
 	condition := bson.M{
 		"_id": objID,
 	}
@@ -40,8 +39,7 @@ func (Model *Profile) Update(ID string) (bool, bson.M, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	var GalexORM helpers.Driver
-	Users := GalexORM.Collection("users")
+	var Users = helpers.EstablishDriver("users")
 	IDProfile, _ := primitive.ObjectIDFromHex(ID)
 	Record := make(map[string]interface{})
 	if Model.Name != "" {

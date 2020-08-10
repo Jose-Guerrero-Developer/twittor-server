@@ -23,12 +23,12 @@ type Tweet struct {
 /*Get Returns all tweets */
 func (Model *Tweet) Get() ([]*Tweet, error) {
 	var data []*Tweet
-	var Tweets helpers.Driver
+	var Tweets = helpers.EstablishDriver("tweets")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	cursor, err := Tweets.Find(ctx, "tweets", bson.M{})
+	cursor, err := Tweets.Find(ctx, bson.M{})
 	if err != nil {
 		return data, err
 	}
@@ -45,13 +45,13 @@ func (Model *Tweet) Get() ([]*Tweet, error) {
 
 /*GetID Return tweet ID */
 func (Model *Tweet) GetID(IDTweet string) (*Tweet, error) {
-	var Tweets helpers.Driver
+	var Tweets = helpers.EstablishDriver("tweets")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	ID, _ := primitive.ObjectIDFromHex(IDTweet)
-	if err := Tweets.FindOne(ctx, "tweets", bson.M{"_id": bson.M{"$eq": ID}}).Decode(&Model); err != nil {
+	if err := Tweets.FindOne(ctx, bson.M{"_id": bson.M{"$eq": ID}}).Decode(&Model); err != nil {
 		return Model, err
 	}
 	return Model, nil
@@ -60,13 +60,13 @@ func (Model *Tweet) GetID(IDTweet string) (*Tweet, error) {
 /*GetProfile Return all tweets in a profile */
 func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, error) {
 	var data []*Tweet
-	var Tweets helpers.Driver
+	var Tweets = helpers.EstablishDriver("tweets")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	ID, _ := primitive.ObjectIDFromHex(IDProfile)
-	cursor, err := Tweets.Find(ctx, "tweets", bson.M{"_id_profile": bson.M{"$eq": ID}})
+	cursor, err := Tweets.Find(ctx, bson.M{"_id_profile": bson.M{"$eq": ID}})
 	if err != nil {
 		return data, err
 	}
@@ -83,13 +83,13 @@ func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, error) {
 
 /*Store Store a tweet in the database */
 func (Model *Tweet) Store() (bool, error) {
-	var Tweets helpers.Driver
+	var Tweets = helpers.EstablishDriver("tweets")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	Model.CreatedAt = time.Now()
-	if _, err := Tweets.InsertOne(ctx, "tweets", Model); err != nil {
+	if _, err := Tweets.InsertOne(ctx, Model); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -97,7 +97,7 @@ func (Model *Tweet) Store() (bool, error) {
 
 /*Update Update a tweet in the database */
 func (Model *Tweet) Update(IDTweet string) (*Tweet, error) {
-	var Tweets helpers.Driver
+	var Tweets = helpers.EstablishDriver("tweets")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
@@ -111,10 +111,10 @@ func (Model *Tweet) Update(IDTweet string) (*Tweet, error) {
 		data["message"] = Model.Message
 	}
 	filter := bson.M{"_id": bson.M{"$eq": ID}}
-	if _, err := Tweets.UpdateOne(ctx, "tweets", filter, bson.M{"$set": data}); err != nil {
+	if _, err := Tweets.UpdateOne(ctx, filter, bson.M{"$set": data}); err != nil {
 		return Model, err
 	}
-	if err := Tweets.FindOne(ctx, "tweets", filter).Decode(&Model); err != nil {
+	if err := Tweets.FindOne(ctx, filter).Decode(&Model); err != nil {
 		return Model, err
 	}
 	return Model, nil
@@ -122,14 +122,14 @@ func (Model *Tweet) Update(IDTweet string) (*Tweet, error) {
 
 /*Delete Delete a tweet in the database */
 func (Model *Tweet) Delete(IDTweet string) error {
-	var Tweets helpers.Driver
+	var Tweets = helpers.EstablishDriver("tweets")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	ID, _ := primitive.ObjectIDFromHex(IDTweet)
 	filter := bson.M{"_id": bson.M{"$eq": ID}}
-	if result, err := Tweets.DeleteOne(ctx, "tweets", filter); err != nil || result.DeletedCount < 1 {
+	if result, err := Tweets.DeleteOne(ctx, filter); err != nil || result.DeletedCount < 1 {
 		return errors.New("It is not possible to remove the resource")
 	}
 	return nil

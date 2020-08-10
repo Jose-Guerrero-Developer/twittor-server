@@ -30,6 +30,9 @@ func API() {
 	subscribe("POST", "/api/tweets", middlewares.ValidateTokenAccess(Tweet.Store))
 	subscribe("PUT", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.Update))
 	subscribe("DELETE", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.Delete))
+	/* Routes Followers */
+	var Follow controllers.Follow
+	subscribe("POST", "/api/followers", middlewares.ValidateTokenAccess(Follow.Store))
 	/* Routes Uploads */
 	var Upload controllers.Upload
 	subscribe("POST", "/api/profiles/{id}/upload/avatar", middlewares.ValidateTokenAccess(Upload.Avatar))

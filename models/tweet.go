@@ -83,14 +83,13 @@ func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, error) {
 
 /*Store Store a tweet in the database */
 func (Model *Tweet) Store() (bool, error) {
-	var GalexORM helpers.Driver
+	var Tweets helpers.Driver
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	Tweets := GalexORM.Collection("tweets")
 	Model.CreatedAt = time.Now()
-	if _, err := Tweets.InsertOne(ctx, Model); err != nil {
+	if _, err := Tweets.InsertOne(ctx, "tweets", Model); err != nil {
 		return false, err
 	}
 	return true, nil

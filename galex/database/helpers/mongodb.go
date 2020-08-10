@@ -12,6 +12,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+/*Collection returns a collection from the database */
+func (Helper *Driver) Collection(name string) *mongo.Collection {
+	var GalexDatabase database.Driver
+	return GalexDatabase.Client().Database(GalexDatabase.GetDatabaseName()).Collection(name)
+}
+
 /*Find Mongo Find */
 func (Helper *Driver) Find(ctx context.Context, table string, filter bson.M) (*mongo.Cursor, error) {
 	var GalexRequest request.Driver
@@ -34,8 +40,8 @@ func (Helper *Driver) FindOne(ctx context.Context, table string, filter bson.M) 
 	return collection.FindOne(ctx, filter)
 }
 
-/*Collection returns a collection from the database */
-func (Helper *Driver) Collection(name string) *mongo.Collection {
-	var GalexDatabase database.Driver
-	return GalexDatabase.Client().Database(GalexDatabase.GetDatabaseName()).Collection(name)
+/*InsertOne Mongo InsertOne */
+func (Helper *Driver) InsertOne(ctx context.Context, table string, document interface{}) (*mongo.InsertOneResult, error) {
+	collection := Helper.Collection(table)
+	return collection.InsertOne(ctx, document)
 }

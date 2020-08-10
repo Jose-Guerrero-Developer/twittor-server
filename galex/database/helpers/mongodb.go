@@ -45,3 +45,9 @@ func (Helper *Driver) InsertOne(ctx context.Context, table string, document inte
 	collection := Helper.Collection(table)
 	return collection.InsertOne(ctx, document)
 }
+
+/*UpdateOne Mongo UpdateOne */
+func (Helper *Driver) UpdateOne(ctx context.Context, table string, filter bson.M, update bson.M) (*mongo.UpdateResult, error) {
+	collection := Helper.Collection(table)
+	return collection.UpdateOne(ctx, filter, update)
+}

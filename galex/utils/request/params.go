@@ -1,4 +1,4 @@
-package pagination
+package request
 
 import (
 	"strconv"
@@ -15,7 +15,7 @@ func (Controller *Driver) AddHeader(name string, value string) {
 /*GetPage Returns the page number to be displayed */
 func (Controller *Driver) GetPage() int64 {
 	var GalexURL url.Driver
-	page, _ := strconv.ParseInt(GalexURL.GetRequest().Header.Get("page"), 10, 64)
+	page, _ := strconv.ParseInt(GalexURL.GetRequest().Header.Get("Current-Page"), 10, 64)
 	if page < 1 {
 		page = 1
 	}
@@ -25,7 +25,7 @@ func (Controller *Driver) GetPage() int64 {
 /*GetCount Returns the number of records to be displayed */
 func (Controller *Driver) GetCount() int64 {
 	var GalexURL url.Driver
-	count, _ := strconv.ParseInt(GalexURL.GetRequest().Header.Get("count"), 10, 64)
+	count, _ := strconv.ParseInt(GalexURL.GetRequest().Header.Get("Total-Count"), 10, 64)
 	if count < 1 {
 		count = 10
 	}

@@ -7,9 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/pagination"
-
 	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/database/helpers"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/request"
 
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -28,18 +27,12 @@ type Tweet struct {
 /*Get Returns all tweets */
 func (Model *Tweet) Get() ([]*Tweet, error) {
 	var data []*Tweet
-	var GalexORM helpers.Driver
-	var GalexPagination pagination.Driver
+	var Tweets helpers.Driver
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	Tweets := GalexORM.Collection("tweets")
-	opts := options.Find()
-	opts.SetLimit(GalexPagination.GetCount())
-	opts.SetSort(bson.D{{Key: "created_at", Value: -1}})
-	opts.SetSkip((GalexPagination.GetPage() - 1) * GalexPagination.GetCount())
-	cursor, err := Tweets.Find(ctx, bson.M{}, opts)
+	cursor, err := Tweets.Find(ctx, "tweets", bson.M{})
 	if err != nil {
 		return data, err
 	}
@@ -51,7 +44,6 @@ func (Model *Tweet) Get() ([]*Tweet, error) {
 		}
 		data = append(data, &record)
 	}
-	GalexPagination.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
 	return data, nil
 }
 
@@ -75,7 +67,7 @@ func (Model *Tweet) GetID(IDTweet string) (*Tweet, error) {
 func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, bool) {
 	var data []*Tweet
 	var GalexORM helpers.Driver
-	var GalexPagination pagination.Driver
+	var GalexRequest request.Driver
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
@@ -84,9 +76,9 @@ func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, bool) {
 	ID, _ := primitive.ObjectIDFromHex(IDProfile)
 	filter := bson.M{"_id_profile": bson.M{"$eq": ID}}
 	opts := options.Find()
-	opts.SetLimit(GalexPagination.GetCount())
+	opts.SetLimit(GalexRequest.GetCount())
 	opts.SetSort(bson.D{{Key: "created_at", Value: -1}})
-	opts.SetSkip((GalexPagination.GetPage() - 1) * GalexPagination.GetCount())
+	opts.SetSkip((GalexRequest.GetPage() - 1) * GalexRequest.GetCount())
 	cursor, err := Tweets.Find(ctx, filter, opts)
 	if err != nil {
 		return data, false
@@ -99,6 +91,7 @@ func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, bool) {
 		}
 		data = append(data, &record)
 	}
+	GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
 	return data, true
 }
 

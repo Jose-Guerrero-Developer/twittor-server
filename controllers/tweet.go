@@ -3,6 +3,9 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/request"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
 
@@ -19,9 +22,11 @@ type Tweet struct{}
 /*Get Returns all tweets */
 func (Controller *Tweet) Get(w http.ResponseWriter, r *http.Request) {
 	var Tweet models.Tweet
+	var GalexRequest request.Driver
 	var GalexResponse response.Driver
 
 	if data, err := Tweet.Get(); err == nil {
+		GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
 		GalexResponse.Success(data, http.StatusOK)
 		return
 	}
@@ -46,6 +51,7 @@ func (Controller *Tweet) GetID(w http.ResponseWriter, r *http.Request) {
 func (Controller *Tweet) GetProfile(w http.ResponseWriter, r *http.Request) {
 	var Tweet models.Tweet
 	var Profile models.Profile
+	var GalexRequest request.Driver
 	var GalexResponse response.Driver
 
 	params := mux.Vars(r)
@@ -55,6 +61,7 @@ func (Controller *Tweet) GetProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if data, status := Tweet.GetProfile(IDProfile); data != nil && status {
+		GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
 		GalexResponse.Success(data, http.StatusOK)
 		return
 	}

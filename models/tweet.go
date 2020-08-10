@@ -4,13 +4,9 @@ import (
 	"context"
 	"errors"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/database/helpers"
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/request"
-
-	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -49,39 +45,30 @@ func (Model *Tweet) Get() ([]*Tweet, error) {
 
 /*GetID Return tweet ID */
 func (Model *Tweet) GetID(IDTweet string) (*Tweet, error) {
-	var GalexORM helpers.Driver
+	var Tweets helpers.Driver
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	Tweets := GalexORM.Collection("tweets")
 	ID, _ := primitive.ObjectIDFromHex(IDTweet)
-	filter := bson.M{"_id": bson.M{"$eq": ID}}
-	if err := Tweets.FindOne(ctx, filter).Decode(&Model); err != nil {
+	if err := Tweets.FindOne(ctx, "tweets", bson.M{"_id": bson.M{"$eq": ID}}).Decode(&Model); err != nil {
 		return Model, err
 	}
 	return Model, nil
 }
 
 /*GetProfile Return all tweets in a profile */
-func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, bool) {
+func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, error) {
 	var data []*Tweet
-	var GalexORM helpers.Driver
-	var GalexRequest request.Driver
+	var Tweets helpers.Driver
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	Tweets := GalexORM.Collection("tweets")
 	ID, _ := primitive.ObjectIDFromHex(IDProfile)
-	filter := bson.M{"_id_profile": bson.M{"$eq": ID}}
-	opts := options.Find()
-	opts.SetLimit(GalexRequest.GetCount())
-	opts.SetSort(bson.D{{Key: "created_at", Value: -1}})
-	opts.SetSkip((GalexRequest.GetPage() - 1) * GalexRequest.GetCount())
-	cursor, err := Tweets.Find(ctx, filter, opts)
+	cursor, err := Tweets.Find(ctx, "tweets", bson.M{"_id_profile": bson.M{"$eq": ID}})
 	if err != nil {
-		return data, false
+		return data, err
 	}
 	for cursor.Next(ctx) {
 		var record Tweet
@@ -91,8 +78,7 @@ func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, bool) {
 		}
 		data = append(data, &record)
 	}
-	GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
-	return data, true
+	return data, nil
 }
 
 /*Store Store a tweet in the database */

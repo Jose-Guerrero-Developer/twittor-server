@@ -12,18 +12,26 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-/*Find Mongo find */
+/*Find Mongo Find */
 func (Helper *Driver) Find(ctx context.Context, table string, filter bson.M) (*mongo.Cursor, error) {
 	var GalexRequest request.Driver
 	var GalexDatabase database.Driver
 
-	collections := GalexDatabase.Client().Database(GalexDatabase.GetDatabaseName()).Collection(table)
+	collection := GalexDatabase.Client().Database(GalexDatabase.GetDatabaseName()).Collection(table)
 	opts := options.Find()
 	opts.SetLimit(GalexRequest.GetCount())
 	opts.SetSort(bson.D{{Key: "created_at", Value: -1}})
 	opts.SetSkip((GalexRequest.GetPage() - 1) * GalexRequest.GetCount())
 	GalexRequest.AddHeader("X-Current-Page", strconv.FormatInt(GalexRequest.GetPage(), 10))
-	return collections.Find(ctx, filter, opts)
+	return collection.Find(ctx, filter, opts)
+}
+
+/*FindOne Mongo FindOne */
+func (Helper *Driver) FindOne(ctx context.Context, table string, filter bson.M) *mongo.SingleResult {
+	var GalexDatabase database.Driver
+
+	collection := GalexDatabase.Client().Database(GalexDatabase.GetDatabaseName()).Collection(table)
+	return collection.FindOne(ctx, filter)
 }
 
 /*Collection returns a collection from the database */

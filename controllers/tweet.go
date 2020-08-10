@@ -60,7 +60,7 @@ func (Controller *Tweet) GetProfile(w http.ResponseWriter, r *http.Request) {
 		GalexResponse.Failed("012", "Resource in the found", "Profile id not found", http.StatusNotFound)
 		return
 	}
-	if data, status := Tweet.GetProfile(IDProfile); data != nil && status {
+	if data, err := Tweet.GetProfile(IDProfile); data != nil && err == nil {
 		GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
 		GalexResponse.Success(data, http.StatusOK)
 		return

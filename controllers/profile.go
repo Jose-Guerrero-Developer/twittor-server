@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 
@@ -31,6 +33,29 @@ func (Controller *Profile) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	GalexResponse.Success(Profile, http.StatusOK)
+}
+
+/*GetAvatar Get avatar from a profile */
+func (Controller *Profile) GetAvatar(w http.ResponseWriter, r *http.Request) {
+	var Profile models.Profile
+	var GalexResponse response.Driver
+
+	params := mux.Vars(r)
+	IDProfile := params["id"]
+	if err := Profile.Get(IDProfile); err != nil {
+		GalexResponse.Failed("012", "Resource in the found", "Profile id not found", http.StatusNotFound)
+		return
+	}
+	open, err := os.Open("uploads/avatars/" + Profile.Avatar)
+	if err != nil {
+		GalexResponse.Failed("015", "Error opening writing path", err.Error(), http.StatusBadRequest)
+		return
+	}
+	_, err = io.Copy(w, open)
+	if err != nil {
+		GalexResponse.Failed("016", "Error copying image to destination folder", err.Error(), http.StatusBadRequest)
+		return
+	}
 }
 
 /*Update Update user profile in session */

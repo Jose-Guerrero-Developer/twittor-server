@@ -51,3 +51,9 @@ func (Helper *Driver) UpdateOne(ctx context.Context, table string, filter bson.M
 	collection := Helper.Collection(table)
 	return collection.UpdateOne(ctx, filter, update)
 }
+
+/*DeleteOne Mongo DeleteOne */
+func (Helper *Driver) DeleteOne(ctx context.Context, table string, filter bson.M) (*mongo.DeleteResult, error) {
+	collection := Helper.Collection(table)
+	return collection.DeleteOne(ctx, filter)
+}

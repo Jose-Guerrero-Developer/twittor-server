@@ -122,15 +122,14 @@ func (Model *Tweet) Update(IDTweet string) (*Tweet, error) {
 
 /*Delete Delete a tweet in the database */
 func (Model *Tweet) Delete(IDTweet string) error {
-	var GalexORM helpers.Driver
+	var Tweets helpers.Driver
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	Tweets := GalexORM.Collection("tweets")
 	ID, _ := primitive.ObjectIDFromHex(IDTweet)
 	filter := bson.M{"_id": bson.M{"$eq": ID}}
-	if result, err := Tweets.DeleteOne(ctx, filter); err != nil || result.DeletedCount < 1 {
+	if result, err := Tweets.DeleteOne(ctx, "tweets", filter); err != nil || result.DeletedCount < 1 {
 		return errors.New("It is not possible to remove the resource")
 	}
 	return nil

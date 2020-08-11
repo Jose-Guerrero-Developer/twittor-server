@@ -33,6 +33,7 @@ func API() {
 	/* Routes Followers */
 	var Follow controllers.Follow
 	subscribe("POST", "/api/followers", middlewares.ValidateTokenAccess(Follow.Store))
+	subscribe("DELETE", "/api/followers", middlewares.ValidateTokenAccess(Follow.Delete))
 	/* Routes Uploads */
 	var Upload controllers.Upload
 	subscribe("POST", "/api/profiles/{id}/upload/avatar", middlewares.ValidateTokenAccess(Upload.Avatar))

@@ -20,6 +20,21 @@ type Tweet struct {
 	CreatedAt time.Time          `bson:"created_at" json:"createdAt"`
 }
 
+/*TweetFollow Model TweetsFollow */
+type TweetFollow struct {
+	User struct {
+		ID       primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+		Name     string             `bson:"name" json:"name"`
+		LastName string             `bson:"lastName" json:"lastName"`
+		Email    string             `bson:"email" json:"email"`
+	} `json:"user"`
+	Tweet struct {
+		ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+		Message   string             `bson:"message" json:"message"`
+		CreatedAt time.Time          `bson:"created_at" json:"createdAt"`
+	} `json:"tweet"`
+}
+
 /*Get Returns all tweets */
 func (Model *Tweet) Get() ([]*Tweet, error) {
 	var data []*Tweet
@@ -77,6 +92,48 @@ func (Model *Tweet) GetProfile(IDProfile string) ([]*Tweet, error) {
 			continue
 		}
 		data = append(data, &record)
+	}
+	return data, nil
+}
+
+/*GetFollow Return all tweets follow */
+func (Model *Tweet) GetFollow() ([]*TweetFollow, error) {
+	var data []*TweetFollow
+	var Followers = helpers.EstablishDriver("followers")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	skip := (1 - 1) * 20
+	IDProfile, _ := primitive.ObjectIDFromHex(UID)
+	pepiline := make([]bson.M, 0)
+	pepiline = append(pepiline, bson.M{"$match": bson.M{"_id_profile": IDProfile}})
+	pepiline = append(pepiline, bson.M{
+		"$lookup": bson.M{
+			"from":         "users",
+			"as":           "user",
+			"foreignField": "_id",
+			"localField":   "_id_follow",
+		},
+	})
+	pepiline = append(pepiline, bson.M{
+		"$lookup": bson.M{
+			"from":         "tweets",
+			"as":           "tweet",
+			"foreignField": "_id_profile",
+			"localField":   "_id_follow",
+		},
+	})
+	pepiline = append(pepiline, bson.M{"$unwind": "$user"})
+	pepiline = append(pepiline, bson.M{"$unwind": "$tweet"})
+	pepiline = append(pepiline, bson.M{"$sort": bson.M{"tweets.created_at": -1}})
+	pepiline = append(pepiline, bson.M{"$skip": skip})
+	pepiline = append(pepiline, bson.M{"$limit": 20})
+	cursor, _ := Followers.Aggregate(ctx, pepiline)
+	err := cursor.All(ctx, &data)
+	if err != nil {
+		log.Println("Error: ", err.Error())
+		return data, err
 	}
 	return data, nil
 }

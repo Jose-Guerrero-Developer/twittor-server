@@ -34,6 +34,11 @@ func (Helper *Driver) FindOne(ctx context.Context, filter bson.M) *mongo.SingleR
 	return Helper.GetCollection().FindOne(ctx, filter)
 }
 
+/*Aggregate Mongo Aggregate */
+func (Helper *Driver) Aggregate(ctx context.Context, pepiline []bson.M) (*mongo.Cursor, error) {
+	return Helper.GetCollection().Aggregate(ctx, pepiline)
+}
+
 /*InsertOne Mongo InsertOne */
 func (Helper *Driver) InsertOne(ctx context.Context, document interface{}) (*mongo.InsertOneResult, error) {
 	return Helper.GetCollection().InsertOne(ctx, document)

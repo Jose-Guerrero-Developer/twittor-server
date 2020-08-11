@@ -68,6 +68,20 @@ func (Controller *Tweet) GetProfile(w http.ResponseWriter, r *http.Request) {
 	GalexResponse.Success(bson.M{}, http.StatusOK)
 }
 
+/*GetFollow Return all tweets follow */
+func (Controller *Tweet) GetFollow(w http.ResponseWriter, r *http.Request) {
+	var Tweet models.Tweet
+	var GalexRequest request.Driver
+	var GalexResponse response.Driver
+
+	if data, err := Tweet.GetFollow(); data != nil && err == nil {
+		GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
+		GalexResponse.Success(data, http.StatusOK)
+		return
+	}
+	GalexResponse.Success(bson.M{}, http.StatusOK)
+}
+
 /*Store Store a tweet in the database */
 func (Controller *Tweet) Store(w http.ResponseWriter, r *http.Request) {
 	var Tweet models.Tweet

@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,9 +19,33 @@ type Follow struct {
 	IDFollow  primitive.ObjectID `bson:"_id_follow" json:"idFollow"`
 }
 
+/*GetProfile Returns all followers profile */
+func (Model *Follow) GetProfile(idProfile string) ([]*Follow, error) {
+	var data []*Follow
+	var Followers = helpers.EstablishDriver("followers")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	IDProfile, _ := primitive.ObjectIDFromHex(idProfile)
+	cursor, err := Followers.Find(ctx, bson.M{"_id_profile": bson.M{"$eq": IDProfile}})
+	if err != nil {
+		return data, err
+	}
+	for cursor.Next(ctx) {
+		var record Follow
+		if err := cursor.Decode(&record); err != nil {
+			log.Println("Impossible transforms data follow")
+			continue
+		}
+		data = append(data, &record)
+	}
+	return data, nil
+}
+
 /*Exists There is a relationship between followers */
 func (Model *Follow) Exists(idProfile string, idFollow string) bool {
-	var Followers = helpers.EstablishDriver("follow")
+	var Followers = helpers.EstablishDriver("followers")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
@@ -35,7 +60,7 @@ func (Model *Follow) Exists(idProfile string, idFollow string) bool {
 
 /*Store Store a follow in the database */
 func (Model *Follow) Store() (bool, error) {
-	var Followers = helpers.EstablishDriver("follow")
+	var Followers = helpers.EstablishDriver("followers")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
@@ -48,7 +73,7 @@ func (Model *Follow) Store() (bool, error) {
 
 /*Delete Delete a follow in the database */
 func (Model *Follow) Delete(idProfile string, idFollow string) error {
-	var Followers = helpers.EstablishDriver("follow")
+	var Followers = helpers.EstablishDriver("followers")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()

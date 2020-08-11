@@ -3,8 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
+	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/request"
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
@@ -12,6 +14,22 @@ import (
 
 /*Follow Controller Followers */
 type Follow struct{}
+
+/*GetProfile Returns all followers profile */
+func (Controller *Follow) GetProfile(w http.ResponseWriter, r *http.Request) {
+	var Followers models.Follow
+	var GalexRequest request.Driver
+	var GalexResponse response.Driver
+
+	params := mux.Vars(r)
+	IDProfile := params["id"]
+	if data, err := Followers.GetProfile(IDProfile); data != nil && err == nil {
+		GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
+		GalexResponse.Success(data, http.StatusOK)
+		return
+	}
+	GalexResponse.Success(bson.M{}, http.StatusOK)
+}
 
 /*Exists There is a relationship with the profile to be followed */
 func (Controller *Follow) Exists(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +77,7 @@ func (Controller *Follow) Store(w http.ResponseWriter, r *http.Request) {
 		GalexResponse.Failed("004", "Duplicate data", "There is a relationship with the profile to be followed", http.StatusConflict)
 		return
 	}
-	if Followers.IDProfile.Hex() == models.UID {
+	if Followers.IDFollow.Hex() == models.UID {
 		GalexResponse.Failed("018", "Operation denied", "It's not valid to follow yourself", http.StatusConflict)
 		return
 	}

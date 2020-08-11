@@ -6,11 +6,36 @@ import (
 
 	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
 	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 /*Follow Controller Followers */
 type Follow struct{}
+
+/*Exists There is a relationship with the profile to be followed */
+func (Controller *Follow) Exists(w http.ResponseWriter, r *http.Request) {
+	var Followers models.Follow
+	var Profile models.Profile
+	var GalexResponse response.Driver
+
+	params := mux.Vars(r)
+	IDProfile := params["idProfile"]
+	IDFollow := params["idFollow"]
+	if exists := Profile.ExistsID(IDProfile); !exists {
+		GalexResponse.Failed("012", "Resource in the found", "Profile id not found", http.StatusNotFound)
+		return
+	}
+	if exists := Profile.ExistsID(IDFollow); !exists {
+		GalexResponse.Failed("012", "Resource in the found", "Follow id not found", http.StatusNotFound)
+		return
+	}
+	if exists := Followers.Exists(IDProfile, IDFollow); !exists {
+		GalexResponse.Success(bson.M{"status": false}, http.StatusOK)
+		return
+	}
+	GalexResponse.Success(bson.M{"status": true}, http.StatusOK)
+}
 
 /*Store Store a follow in the database */
 func (Controller *Follow) Store(w http.ResponseWriter, r *http.Request) {

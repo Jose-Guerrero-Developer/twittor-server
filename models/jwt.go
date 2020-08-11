@@ -63,6 +63,7 @@ func (Model *JWT) ValidateToken(token string) (*JWT, bool, string, error) {
 		var User User
 		User.Email = Claims.Email
 		exists := User.ExistsEmail()
+		UID = Claims.ID.Hex()
 		return Claims, exists, Claims.ID.Hex(), nil
 	}
 	return Claims, false, string(""), err

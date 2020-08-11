@@ -59,6 +59,10 @@ func (Controller *Follow) Store(w http.ResponseWriter, r *http.Request) {
 		GalexResponse.Failed("004", "Duplicate data", "There is a relationship with the profile to be followed", http.StatusConflict)
 		return
 	}
+	if Followers.IDProfile.Hex() == models.UID {
+		GalexResponse.Failed("018", "Operation denied", "It's not valid to follow yourself", http.StatusConflict)
+		return
+	}
 	if status, err := Followers.Store(); !status || err != nil {
 		GalexResponse.Failed("005", "Database transaction", "Error storing tweet data. "+err.Error(), http.StatusConflict)
 		return

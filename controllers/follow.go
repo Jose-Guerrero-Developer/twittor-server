@@ -31,6 +31,22 @@ func (Controller *Follow) GetProfile(w http.ResponseWriter, r *http.Request) {
 	GalexResponse.Success(bson.M{}, http.StatusOK)
 }
 
+/*GetFollowed Returns all followed profile */
+func (Controller *Follow) GetFollowed(w http.ResponseWriter, r *http.Request) {
+	var Followers models.Follow
+	var GalexRequest request.Driver
+	var GalexResponse response.Driver
+
+	params := mux.Vars(r)
+	IDProfile := params["id"]
+	if data, err := Followers.GetFollowed(IDProfile); data != nil && err == nil {
+		GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
+		GalexResponse.Success(data, http.StatusOK)
+		return
+	}
+	GalexResponse.Success(bson.M{}, http.StatusOK)
+}
+
 /*Exists There is a relationship with the profile to be followed */
 func (Controller *Follow) Exists(w http.ResponseWriter, r *http.Request) {
 	var Followers models.Follow

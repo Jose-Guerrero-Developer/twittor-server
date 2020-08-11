@@ -43,6 +43,30 @@ func (Model *Follow) GetProfile(idProfile string) ([]*Follow, error) {
 	return data, nil
 }
 
+/*GetFollowed Returns all followed profile */
+func (Model *Follow) GetFollowed(idProfile string) ([]*Follow, error) {
+	var data []*Follow
+	var Followers = helpers.EstablishDriver("followers")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	IDProfile, _ := primitive.ObjectIDFromHex(idProfile)
+	cursor, err := Followers.Find(ctx, bson.M{"_id_follow": bson.M{"$eq": IDProfile}})
+	if err != nil {
+		return data, err
+	}
+	for cursor.Next(ctx) {
+		var record Follow
+		if err := cursor.Decode(&record); err != nil {
+			log.Println("Impossible transforms data follow")
+			continue
+		}
+		data = append(data, &record)
+	}
+	return data, nil
+}
+
 /*Exists There is a relationship between followers */
 func (Model *Follow) Exists(idProfile string, idFollow string) bool {
 	var Followers = helpers.EstablishDriver("followers")

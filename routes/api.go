@@ -32,7 +32,7 @@ func API() {
 	subscribe("DELETE", "/api/tweets/{id}", middlewares.ValidateTokenAccess(Tweet.Delete))
 	/* Routes Followers */
 	var Follow controllers.Follow
-	subscribe("GET", "/api/followers/followed/{id}", middlewares.ValidateTokenAccess(Follow.GetFollowed))
+	subscribe("GET", "/api/followers/followed", middlewares.ValidateTokenAccess(Follow.GetFollowed))
 	subscribe("GET", "/api/followers/profile/{id}", middlewares.ValidateTokenAccess(Follow.GetProfile))
 	subscribe("GET", "/api/followers/profile/{idProfile}/follow/{idFollow}", middlewares.ValidateTokenAccess(Follow.Exists))
 	subscribe("POST", "/api/followers", middlewares.ValidateTokenAccess(Follow.Store))

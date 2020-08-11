@@ -20,8 +20,9 @@ type Follow struct {
 }
 
 /*GetProfile Returns all followers profile */
-func (Model *Follow) GetProfile(idProfile string) ([]*Follow, error) {
-	var data []*Follow
+func (Model *Follow) GetProfile(idProfile string, search string) ([]*User, error) {
+	var data []*User
+	var Profiles = helpers.EstablishDriver("users")
 	var Followers = helpers.EstablishDriver("followers")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
@@ -33,36 +34,47 @@ func (Model *Follow) GetProfile(idProfile string) ([]*Follow, error) {
 		return data, err
 	}
 	for cursor.Next(ctx) {
-		var record Follow
-		if err := cursor.Decode(&record); err != nil {
+		var follow *Follow
+		var user *User
+		if err := cursor.Decode(&follow); err != nil {
 			log.Println("Impossible transforms data follow")
 			continue
 		}
-		data = append(data, &record)
+		if err := Profiles.FindOne(ctx, bson.M{"_id": bson.M{"$eq": follow.IDFollow}, "name": bson.M{"$regex": `(?i)` + search}}).Decode(&user); err != nil {
+			continue
+		}
+		user.Password = ""
+		data = append(data, user)
 	}
 	return data, nil
 }
 
 /*GetFollowed Returns all followed profile */
-func (Model *Follow) GetFollowed(idProfile string) ([]*Follow, error) {
-	var data []*Follow
+func (Model *Follow) GetFollowed(search string) ([]*User, error) {
+	var data []*User
+	var Profiles = helpers.EstablishDriver("users")
 	var Followers = helpers.EstablishDriver("followers")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	IDProfile, _ := primitive.ObjectIDFromHex(idProfile)
+	IDProfile, _ := primitive.ObjectIDFromHex(UID)
 	cursor, err := Followers.Find(ctx, bson.M{"_id_follow": bson.M{"$eq": IDProfile}})
 	if err != nil {
 		return data, err
 	}
 	for cursor.Next(ctx) {
-		var record Follow
-		if err := cursor.Decode(&record); err != nil {
+		var follow *Follow
+		var user *User
+		if err := cursor.Decode(&follow); err != nil {
 			log.Println("Impossible transforms data follow")
 			continue
 		}
-		data = append(data, &record)
+		if err := Profiles.FindOne(ctx, bson.M{"_id": bson.M{"$eq": follow.IDProfile}, "name": bson.M{"$regex": `(?i)` + search}}).Decode(&user); err != nil {
+			continue
+		}
+		user.Password = ""
+		data = append(data, user)
 	}
 	return data, nil
 }

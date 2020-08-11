@@ -23,7 +23,8 @@ func (Controller *Follow) GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 	IDProfile := params["id"]
-	if data, err := Followers.GetProfile(IDProfile); data != nil && err == nil {
+	search := r.URL.Query().Get("search")
+	if data, err := Followers.GetProfile(IDProfile, search); data != nil && err == nil {
 		GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
 		GalexResponse.Success(data, http.StatusOK)
 		return
@@ -37,9 +38,8 @@ func (Controller *Follow) GetFollowed(w http.ResponseWriter, r *http.Request) {
 	var GalexRequest request.Driver
 	var GalexResponse response.Driver
 
-	params := mux.Vars(r)
-	IDProfile := params["id"]
-	if data, err := Followers.GetFollowed(IDProfile); data != nil && err == nil {
+	search := r.URL.Query().Get("search")
+	if data, err := Followers.GetFollowed(search); data != nil && err == nil {
 		GalexRequest.AddHeader("X-Total-Count", strconv.Itoa(len(data)))
 		GalexResponse.Success(data, http.StatusOK)
 		return

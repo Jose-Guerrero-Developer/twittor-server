@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/middleware"
+	"github.com/devJGuerrero/twittor-server/galex/middleware"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"

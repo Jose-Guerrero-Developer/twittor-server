@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/configuration"
+	"github.com/devJGuerrero/twittor-server/galex/configuration"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/readpref"

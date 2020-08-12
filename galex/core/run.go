@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/database"
+	"github.com/devJGuerrero/twittor-server/galex/database"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/router"
-	"github.com/Jose-Guerrero-Developer/twittorbackend/routes"
+	"github.com/devJGuerrero/twittor-server/galex/router"
+	"github.com/devJGuerrero/twittor-server/routes"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/configs"
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/configuration"
+	"github.com/devJGuerrero/twittor-server/configs"
+	"github.com/devJGuerrero/twittor-server/galex/configuration"
 )
 
 /*Run Turn on the server and start the application life cycle */

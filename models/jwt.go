@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/configuration"
+	"github.com/devJGuerrero/twittor-server/galex/configuration"
 
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"

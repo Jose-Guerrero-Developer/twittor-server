@@ -3,7 +3,7 @@ package response
 import (
 	"encoding/json"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/url"
+	"github.com/devJGuerrero/twittor-server/galex/utils/url"
 )
 
 /*Success returns a response structure in json format */

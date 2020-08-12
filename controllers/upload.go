@@ -8,10 +8,10 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
+	"github.com/devJGuerrero/twittor-server/models"
 	"go.mongodb.org/mongo-driver/bson"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
+	"github.com/devJGuerrero/twittor-server/galex/response"
 )
 
 /*Upload Controller Uploads */

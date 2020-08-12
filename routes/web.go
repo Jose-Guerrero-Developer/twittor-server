@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/Jose-Guerrero-Developer/twittorbackend/controllers"
+	"github.com/devJGuerrero/twittor-server/controllers"
 )
 
 /*Web subscribe the routes to the *mux.Router instance */

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/core"
+	"github.com/devJGuerrero/twittor-server/galex/core"
 )
 
 func main() {

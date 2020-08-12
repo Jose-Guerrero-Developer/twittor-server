@@ -4,9 +4,9 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/request"
+	"github.com/devJGuerrero/twittor-server/galex/utils/request"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/database"
+	"github.com/devJGuerrero/twittor-server/galex/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

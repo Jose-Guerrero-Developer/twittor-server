@@ -3,7 +3,7 @@ package configs
 import (
 	"os"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/configuration"
+	"github.com/devJGuerrero/twittor-server/galex/configuration"
 )
 
 /*Driver Source of the package */

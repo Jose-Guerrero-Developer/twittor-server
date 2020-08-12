@@ -1,4 +1,4 @@
-module github.com/Jose-Guerrero-Developer/twittorbackend
+module github.com/devJGuerrero/twittor-server
 
 go 1.14
 

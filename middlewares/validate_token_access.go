@@ -3,11 +3,11 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/url"
+	"github.com/devJGuerrero/twittor-server/galex/utils/url"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
+	"github.com/devJGuerrero/twittor-server/galex/response"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
+	"github.com/devJGuerrero/twittor-server/models"
 )
 
 /*ValidateTokenAccess validate access token */

@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/database"
+	"github.com/devJGuerrero/twittor-server/galex/database"
 )
 
 /*CheckStatusDatabaseConnection Check the status of the database connection */

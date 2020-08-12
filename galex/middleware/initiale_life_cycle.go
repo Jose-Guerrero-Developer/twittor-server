@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/url"
+	"github.com/devJGuerrero/twittor-server/galex/utils/url"
 )
 
 /*InitialeLifeCycle start the life cycle of the Galex */

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/database/helpers"
+	"github.com/devJGuerrero/twittor-server/galex/database/helpers"
 
 	"go.mongodb.org/mongo-driver/bson"
 

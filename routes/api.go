@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"github.com/Jose-Guerrero-Developer/twittorbackend/controllers"
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/router"
-	"github.com/Jose-Guerrero-Developer/twittorbackend/middlewares"
+	"github.com/devJGuerrero/twittor-server/controllers"
+	"github.com/devJGuerrero/twittor-server/galex/router"
+	"github.com/devJGuerrero/twittor-server/middlewares"
 )
 
 var subscribe = router.Subscribe

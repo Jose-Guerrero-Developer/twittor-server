@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/response"
-	"github.com/Jose-Guerrero-Developer/twittorbackend/galex/utils/request"
-	"github.com/Jose-Guerrero-Developer/twittorbackend/models"
+	"github.com/devJGuerrero/twittor-server/galex/response"
+	"github.com/devJGuerrero/twittor-server/galex/utils/request"
+	"github.com/devJGuerrero/twittor-server/models"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 )

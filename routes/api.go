@@ -15,7 +15,7 @@ func API() {
 	subscribe("POST", "/api/sign", Auth.Sign)
 	/* Routes Users */
 	var User controllers.User
-	subscribe("POST", "/api/users", middlewares.ValidateTokenAccess(User.Store))
+	subscribe("POST", "/api/users", User.Store)
 	/* Routes Profile */
 	var Profile controllers.Profile
 	subscribe("GET", "/api/profiles", middlewares.ValidateTokenAccess(Profile.Get))

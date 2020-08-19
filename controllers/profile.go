@@ -51,6 +51,7 @@ func (Controller *Profile) GetAvatar(w http.ResponseWriter, r *http.Request) {
 		GalexResponse.Failed("015", "Error opening writing path", err.Error(), http.StatusBadRequest)
 		return
 	}
+	w.Header().Set("Content-Type", "image/jpeg; image/png")
 	_, err = io.Copy(w, open)
 	if err != nil {
 		GalexResponse.Failed("016", "Error copying image to destination folder", err.Error(), http.StatusBadRequest)
@@ -74,6 +75,7 @@ func (Controller *Profile) GetBanner(w http.ResponseWriter, r *http.Request) {
 		GalexResponse.Failed("015", "Error opening writing path", err.Error(), http.StatusBadRequest)
 		return
 	}
+	w.Header().Set("Content-Type", "image/jpeg; image/png")
 	_, err = io.Copy(w, open)
 	if err != nil {
 		GalexResponse.Failed("016", "Error copying image to destination folder", err.Error(), http.StatusBadRequest)

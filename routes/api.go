@@ -19,8 +19,8 @@ func API() {
 	/* Routes Profile */
 	var Profile controllers.Profile
 	subscribe("GET", "/api/profiles", middlewares.ValidateTokenAccess(Profile.Get))
-	subscribe("GET", "/api/profiles/{id}/avatar", middlewares.ValidateTokenAccess(Profile.GetAvatar))
-	subscribe("GET", "/api/profiles/{id}/banner", middlewares.ValidateTokenAccess(Profile.GetBanner))
+	subscribe("GET", "/api/profiles/{id}/avatar", Profile.GetAvatar)
+	subscribe("GET", "/api/profiles/{id}/banner", Profile.GetBanner)
 	subscribe("PUT", "/api/profiles/{id}", middlewares.ValidateTokenAccess(Profile.Update))
 	/* Routes Tweets */
 	var Tweet controllers.Tweet
